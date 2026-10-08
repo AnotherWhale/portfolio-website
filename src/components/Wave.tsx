@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { animated, useSpring } from "react-spring";
 import { useState, useEffect } from "react";
 
@@ -6,9 +6,10 @@ interface WaveProps {
   waves: string[];
   color: string;
   animationTime: number;
+  extendFill?: boolean;
 }
 
-const Wave: FC<WaveProps> = ({ waves, color, animationTime }) => {
+const Wave: FC<WaveProps> = ({ waves, color, animationTime, extendFill = false }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const animationProps = useSpring({
     wave: waves[activeIndex],
@@ -36,7 +37,10 @@ const Wave: FC<WaveProps> = ({ waves, color, animationTime }) => {
 
   return (
     <svg
-      id="visual"
+      className="wave-art"
+      style={extendFill ? { overflow: "visible" } : undefined}
+      aria-hidden="true"
+      preserveAspectRatio="none"
       viewBox="0 0 1920 1080"
       width="1920"
       height="1080"
@@ -49,6 +53,7 @@ const Wave: FC<WaveProps> = ({ waves, color, animationTime }) => {
         strokeLinecap="round"
         strokeLinejoin="miter"
       ></animated.path>
+      {extendFill && <rect x="0" y="1079" width="1920" height="10800" fill={color} />}
     </svg>
   );
 };

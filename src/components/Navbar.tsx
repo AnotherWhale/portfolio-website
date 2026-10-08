@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { SpringValue, animated, useSpring } from "react-spring";
+import { animated, useSpring } from "react-spring";
 import { useState, useEffect } from "react";
 
 const waves = [
@@ -73,7 +73,7 @@ const Navbar: FC<NavbarProps> = ({
           </ul>
         </div>
         <div className="dropdown dropdown-end md:hidden">
-          <label tabIndex={0} className="btn btn-ghost btn-circle">
+          <label tabIndex={0} aria-label="Open navigation menu" className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -107,7 +107,7 @@ const Navbar: FC<NavbarProps> = ({
       </div>
       <animated.div
         // style={{ opacity: shapeOpacity }}
-        className="w-full fixed top-0 -z-10"
+        className="w-full fixed top-0 -z-10 pointer-events-none"
       >
         <div
           className={`${
@@ -115,10 +115,12 @@ const Navbar: FC<NavbarProps> = ({
           } w-full h-10 xl:h-5 2xl:h-2 transition-colors duration-300`}
         ></div>
         <svg
-          id="visual"
-          viewBox="0 0 1920 1080"
-          width="1920"
-          height="1080"
+          className="nav-wave"
+          aria-hidden="true"
+          preserveAspectRatio="none"
+          viewBox="0 0 1920 80"
+          width="100%"
+          height="40"
           xmlns="http://www.w3.org/2000/svg"
           version="1.1"
         >

@@ -5,3 +5,23 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+
+html, body, #root { margin: 0; min-height: 100%; }
+.nav-wave { display: block; width: 100%; }
+.mobile-layout { overflow-x: clip; }
+.mobile-nav { position: fixed; inset: 0 0 auto; z-index: 100; isolation: isolate; }
+.mobile-nav .navbar { min-height: 64px; padding-inline: 12px; }
+.mobile-nav .navbar > .flex-1 { min-width: 0; }
+.mobile-nav .navbar .text-xl { font-size: clamp(1rem, 4vw, 1.25rem); }
+.mobile-nav .nav-wave { height: 20px; }
+.mobile-hero { position: relative; overflow: clip; min-height: 520px; min-height: max(520px, 85svh); display: grid; place-items: center; padding: 100px 24px 150px; }
+.mobile-hero h1 { position: relative; z-index: 1; max-width: 560px; text-align: center; font-size: clamp(2rem, 7vw, 3.25rem); line-height: 1.25; font-weight: 500; }
+.mobile-hero h1 span { display: block; margin-top: 8px; }
+.mobile-waves { position: absolute; z-index: 2; inset: auto 0 0; height: 200px; pointer-events: none; }
+.mobile-waves .wave-art { position: absolute; bottom: 0; width: 100%; height: 340px; }
+.mobile-waves .wave-art:nth-child(2) { height: 280px; }
+.mobile-waves .wave-art:nth-child(3) { height: 220px; }
+.mobile-section { scroll-margin-top: 104px; padding: 40px 20px; max-width: 720px; margin-inline: auto; }
+.mobile-section h2 { font-size: 1.75rem; font-weight: 600; }
+.mobile-section#about, .mobile-section#contact { min-height: 220px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
