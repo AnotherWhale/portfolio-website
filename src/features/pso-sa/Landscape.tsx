@@ -4,6 +4,19 @@ import type { Snapshot } from './optimizer';
 import { viridis } from './palette';
 
 export interface LandscapeProps { objective: Objective; snapshot: Snapshot; logarithmic: boolean; }
+
+function readPlotColors(element: Element) {
+  const style = getComputedStyle(element);
+  const color = (name: string) => style.getPropertyValue(`--portfolio-${name}`).trim();
+  return {
+    background: color("background"),
+    text: color("text"),
+    grid: color("control"),
+    axis: color("highlight"),
+    best: color("gold"),
+  };
+}
+
 export function sampleLandscape(objective: Objective, logarithmic: boolean, resolution = 100) {
   const values = Array.from({length: (resolution+1)**2}, (_,i) => {
     const x = objective.bounds[0][0]+(i%(resolution+1))/resolution*(objective.bounds[0][1]-objective.bounds[0][0]);
@@ -29,6 +42,7 @@ export default function Landscape3D({objective,snapshot,logarithmic}: LandscapeP
     Promise.all([import('three'),import('three/examples/jsm/controls/OrbitControls.js')]).then(([THREE,{OrbitControls}]) => {
       if (disposed || !host.current) return;
       const container = host.current;
+      const plot = readPlotColors(container);
       let renderer: InstanceType<typeof THREE.WebGLRenderer>;
       try { renderer = new THREE.WebGLRenderer({antialias:true,alpha:true}); }
       catch { setError(true); return; }
@@ -64,15 +78,20 @@ export default function Landscape3D({objective,snapshot,logarithmic}: LandscapeP
       geometry.computeVertexNormals();
       const material = new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide,transparent:true,opacity:.82});
       scene.add(new THREE.Mesh(geometry,material));
-      const grid = new THREE.GridHelper(10,10,0x8dcac1,0x42333f);
+      const grid = new THREE.GridHelper(10,10,plot.axis,plot.grid);
       grid.position.y = -.06; scene.add(grid);
       const particleGeometry = new THREE.SphereGeometry(.085,10,8);
-      const particleMaterial = new THREE.MeshBasicMaterial({color:0xffffff,depthTest:false});
+      const particleMaterial = new THREE.MeshBasicMaterial({color:plot.text,depthTest:false});
       const particles = new THREE.InstancedMesh(particleGeometry,particleMaterial,count);
       particles.renderOrder=2; particles.frustumCulled=false; scene.add(particles);
       const bestGeometry = new THREE.SphereGeometry(.16,12,10);
-      const bestMaterial = new THREE.MeshBasicMaterial({color:0xfc9581,depthTest:false});
-      const best = new THREE.Mesh(bestGeometry,bestMaterial); best.renderOrder=3; scene.add(best);
+      const bestMaterial = new THREE.MeshBasicMaterial({color:plot.best,depthTest:false});
+      const haloMaterial = new THREE.MeshBasicMaterial({color:plot.background,depthTest:false});
+      const halo = new THREE.Mesh(bestGeometry,haloMaterial);
+      halo.scale.setScalar(1.3);
+      halo.renderOrder=3;
+      scene.add(halo);
+      const best = new THREE.Mesh(bestGeometry,bestMaterial); best.renderOrder=4; scene.add(best);
       const dummy = new THREE.Object3D();
       const displayed = latest.current.positions.map(p=>[...p]);
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -92,13 +111,14 @@ export default function Landscape3D({objective,snapshot,logarithmic}: LandscapeP
         particles.instanceMatrix.needsUpdate=true;
         const state=latest.current;
         best.position.set(map(state.best[0],0),sample.normalize(state.bestValue)*3+.18,map(state.best[1],1));
+        halo.position.copy(best.position);
         controls.update(); renderer.render(scene,camera);
       });
       const lost = (event: Event) => { event.preventDefault(); setError(true); };
       renderer.domElement.addEventListener('webglcontextlost',lost);
       cleanup = () => {
         renderer.setAnimationLoop(null); observer.disconnect(); visibility.disconnect(); controls.dispose();
-        geometry.dispose(); material.dispose(); particleGeometry.dispose(); particleMaterial.dispose(); bestGeometry.dispose(); bestMaterial.dispose();
+        geometry.dispose(); material.dispose(); particleGeometry.dispose(); particleMaterial.dispose(); bestGeometry.dispose(); bestMaterial.dispose(); haloMaterial.dispose();
         grid.geometry.dispose(); (grid.material as InstanceType<typeof THREE.Material>).dispose();
         particles.dispose(); renderer.domElement.removeEventListener('webglcontextlost',lost); renderer.dispose(); renderer.domElement.remove();
       };
@@ -110,6 +130,7 @@ export default function Landscape3D({objective,snapshot,logarithmic}: LandscapeP
 
 export function Landscape2D({objective,snapshot,logarithmic}: LandscapeProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const plotColors = useRef<ReturnType<typeof readPlotColors>>();
   const image = useMemo(()=>{
     const sample=sampleLandscape(objective,logarithmic,150);
     const offscreen=document.createElement('canvas'); offscreen.width=151;offscreen.height=151;
@@ -124,13 +145,20 @@ export function Landscape2D({objective,snapshot,logarithmic}: LandscapeProps) {
   useEffect(()=>{
     if(!canvas.current)return;
     const ctx=canvas.current.getContext('2d');if(!ctx)return;
+    const plot = (plotColors.current ??= readPlotColors(canvas.current));
     ctx.clearRect(0,0,600,440);
     ctx.drawImage(image,80,20,440,370);
     const map=(v:number,d:number)=>(v-objective.bounds[d][0])/(objective.bounds[d][1]-objective.bounds[d][0]);
-    snapshot.positions.forEach(([x,y])=>{ctx.beginPath();ctx.arc(80+map(x,0)*440,390-map(y,1)*370,4,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#120c12';ctx.stroke();});
-    ctx.strokeStyle='#fc9581';ctx.lineWidth=3;ctx.beginPath();ctx.arc(80+map(snapshot.best[0],0)*440,390-map(snapshot.best[1],1)*370,8,0,Math.PI*2);ctx.stroke();
-    ctx.fillStyle='#dbc6da';ctx.font='16px sans-serif';ctx.textAlign='center';ctx.fillText(`x: ${objective.bounds[0][0]} → ${objective.bounds[0][1]}`,300,425);
+    ctx.lineWidth=1.5;
+    ctx.fillStyle=plot.text;
+    ctx.strokeStyle=plot.background;
+    snapshot.positions.forEach(([x,y])=>{ctx.beginPath();ctx.arc(80+map(x,0)*440,390-map(y,1)*370,4,0,Math.PI*2);ctx.fill();ctx.stroke();});
+    ctx.beginPath();
+    ctx.arc(80+map(snapshot.best[0],0)*440,390-map(snapshot.best[1],1)*370,8,0,Math.PI*2);
+    ctx.lineWidth=5;ctx.stroke();
+    ctx.strokeStyle=plot.best;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.fillStyle=plot.text;ctx.font='16px sans-serif';ctx.textAlign='center';ctx.fillText(`x: ${objective.bounds[0][0]} → ${objective.bounds[0][1]}`,300,425);
     ctx.save();ctx.translate(35,205);ctx.rotate(-Math.PI/2);ctx.fillText(`y: ${objective.bounds[1][0]} → ${objective.bounds[1][1]}`,0,0);ctx.restore();
   },[image,objective,snapshot]);
-  return <canvas className="viz-map" ref={canvas} width={600} height={440} role="img" aria-label={`${objective.name} heatmap with ${snapshot.positions.length} particles and the best point marked in coral`}/>;
+  return <canvas className="viz-map" ref={canvas} width={600} height={440} role="img" aria-label={`${objective.name} heatmap with ${snapshot.positions.length} particles and the best point marked by an amber ring`}/>;
 }

@@ -1,11 +1,4 @@
 .portfolio {
-  --portfolio-background: #20161f;
-  --portfolio-panel: #2d202b;
-  --portfolio-text: #f8edf6;
-  --portfolio-muted: #e0ccde;
-  --portfolio-gold: #db924b;
-  --portfolio-teal: #10576d;
-  --portfolio-rule: #574152;
   min-height: 100vh;
   background: var(--portfolio-background);
   color: var(--portfolio-text);
@@ -20,11 +13,6 @@
 .portfolio a:not(.portfolio-button) {
   color: var(--portfolio-gold);
   text-underline-offset: .2em;
-}
-
-.portfolio :focus-visible {
-  outline: 2px solid #f5c490;
-  outline-offset: 4px;
 }
 
 .portfolio-nav,
@@ -82,7 +70,7 @@
 }
 
 .portfolio-intro h1 {
-  color: #f0bc88;
+  color: var(--portfolio-gold);
   font-size: clamp(2.2rem, 5.4vw, 3.75rem);
   font-weight: 600;
   letter-spacing: -.045em;
@@ -137,11 +125,11 @@
 }
 
 .portfolio-button-primary:hover {
-  background: #f0bc88;
+  background: var(--portfolio-gold-hover);
 }
 
 .portfolio-button-secondary {
-  border-color: var(--portfolio-rule);
+  border-color: var(--portfolio-control);
   background: var(--portfolio-background);
   color: var(--portfolio-text);
 }
@@ -171,10 +159,14 @@
   line-height: 1.25;
 }
 
-.portfolio-feature,
-.portfolio-contact {
+.portfolio-feature {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.portfolio-projects {
+  display: grid;
+  gap: 1rem;
 }
 
 .portfolio-feature {
@@ -211,8 +203,6 @@
 }
 
 .portfolio-contact {
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 1.5rem 2rem;
   padding-bottom: clamp(2rem, 7vw, 4rem);
 }
 
@@ -220,46 +210,6 @@
   display: inline-block;
   margin-top: .45rem;
   overflow-wrap: anywhere;
-}
-
-.portfolio-contact-form fieldset {
-  display: grid;
-  min-width: 0;
-  gap: .75rem;
-}
-
-.portfolio-contact-form label {
-  display: block;
-  margin-bottom: .25rem;
-  font-weight: 500;
-}
-
-.portfolio-contact-form input,
-.portfolio-contact-form textarea {
-  display: block;
-  width: 100%;
-  min-height: 44px;
-  padding: .45rem .65rem;
-  border: 1px solid var(--portfolio-rule);
-  border-radius: .4rem;
-  background: var(--portfolio-panel);
-}
-
-.portfolio-contact-form textarea {
-  resize: vertical;
-}
-
-.portfolio-contact-form button {
-  justify-self: start;
-}
-
-.portfolio-contact-form button:disabled {
-  opacity: .7;
-  cursor: wait;
-}
-
-.portfolio-form-result {
-  margin-top: .75rem;
 }
 
 @media (max-width: 700px) {
@@ -281,8 +231,7 @@
 }
 
 @media (max-width: 560px) {
-  .portfolio-feature,
-  .portfolio-contact {
+  .portfolio-feature {
     grid-template-columns: minmax(0, 1fr);
   }
 

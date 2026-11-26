@@ -1,0 +1,515 @@
+{
+  "notebookBlob": "e5b6a1acac3088140ec2d16867e7e2bd7e913e85",
+  "instance": 2,
+  "duration": 555,
+  "objective": 554.9997395417,
+  "bound": 545,
+  "gap": 1.8018,
+  "status": "time_limit",
+  "suppliers": [1, 2, 3, 4],
+  "customers": [5, 6, 7, 8, 9, 10],
+  "periods": [
+    {
+      "id": 1,
+      "start": 266
+    },
+    {
+      "id": 2,
+      "start": 405
+    }
+  ],
+  "legs": [
+    {
+      "vehicle": 0,
+      "from": 0,
+      "to": 3,
+      "start": 0,
+      "end": 35,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 0,
+      "from": 3,
+      "to": 2,
+      "start": 35,
+      "end": 200,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 2, 0]
+    },
+    {
+      "vehicle": 0,
+      "from": 2,
+      "to": 0,
+      "start": 200,
+      "end": 395,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 12, 2, 0]
+    },
+    {
+      "vehicle": 0,
+      "from": 0,
+      "to": 8,
+      "start": 405,
+      "end": 470,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [20, 0, 0, 3]
+    },
+    {
+      "vehicle": 0,
+      "from": 8,
+      "to": 0,
+      "start": 470,
+      "end": 535,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 1,
+      "from": 0,
+      "to": 1,
+      "start": 0,
+      "end": 133,
+      "period": 1,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 1,
+      "from": 1,
+      "to": 0,
+      "start": 133,
+      "end": 266,
+      "period": 1,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [14, 0, 0, 0]
+    },
+    {
+      "vehicle": 1,
+      "from": 0,
+      "to": 9,
+      "start": 266,
+      "end": 304,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [1, 0, 1, 12]
+    },
+    {
+      "vehicle": 1,
+      "from": 9,
+      "to": 7,
+      "start": 304,
+      "end": 406,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [1, 0, 1, 5]
+    },
+    {
+      "vehicle": 1,
+      "from": 7,
+      "to": 10,
+      "start": 406,
+      "end": 490,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 1,
+      "from": 10,
+      "to": 0,
+      "start": 490,
+      "end": 555,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 2,
+      "from": 0,
+      "to": 3,
+      "start": 0,
+      "end": 35,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 2,
+      "from": 3,
+      "to": 0,
+      "start": 35,
+      "end": 70,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 2,
+      "from": 0,
+      "to": 9,
+      "start": 405,
+      "end": 443,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [14, 8, 2, 0]
+    },
+    {
+      "vehicle": 2,
+      "from": 9,
+      "to": 10,
+      "start": 443,
+      "end": 472,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [4, 8, 0, 0]
+    },
+    {
+      "vehicle": 2,
+      "from": 10,
+      "to": 0,
+      "start": 472,
+      "end": 537,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 3,
+      "from": 0,
+      "to": 1,
+      "start": 0,
+      "end": 133,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 3,
+      "from": 1,
+      "to": 3,
+      "start": 133,
+      "end": 232,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [34, 0, 0, 0]
+    },
+    {
+      "vehicle": 3,
+      "from": 3,
+      "to": 0,
+      "start": 232,
+      "end": 267,
+      "period": 2,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [34, 0, 0, 0]
+    },
+    {
+      "vehicle": 3,
+      "from": 0,
+      "to": 6,
+      "start": 405,
+      "end": 480,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 4, 0, 0]
+    },
+    {
+      "vehicle": 3,
+      "from": 6,
+      "to": 0,
+      "start": 480,
+      "end": 555,
+      "period": 2,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 4,
+      "from": 0,
+      "to": 3,
+      "start": 0,
+      "end": 35,
+      "period": 1,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "vehicle": 4,
+      "from": 3,
+      "to": 4,
+      "start": 35,
+      "end": 128,
+      "period": 1,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 14, 0]
+    },
+    {
+      "vehicle": 4,
+      "from": 4,
+      "to": 0,
+      "start": 128,
+      "end": 256,
+      "period": 1,
+      "phase": "pickup",
+      "capacity": 70,
+      "cargo": [0, 0, 14, 50]
+    },
+    {
+      "vehicle": 4,
+      "from": 0,
+      "to": 10,
+      "start": 266,
+      "end": 331,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [13, 0, 13, 35]
+    },
+    {
+      "vehicle": 4,
+      "from": 10,
+      "to": 6,
+      "start": 331,
+      "end": 381,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [13, 0, 5, 25]
+    },
+    {
+      "vehicle": 4,
+      "from": 6,
+      "to": 5,
+      "start": 381,
+      "end": 453,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [1, 0, 0, 11]
+    },
+    {
+      "vehicle": 4,
+      "from": 5,
+      "to": 0,
+      "start": 453,
+      "end": 521,
+      "period": 1,
+      "phase": "delivery",
+      "capacity": 70,
+      "cargo": [0, 0, 0, 0]
+    }
+  ],
+  "visits": [
+    {
+      "node": 3,
+      "vehicle": 0,
+      "minute": 35,
+      "phase": "pickup",
+      "cargo": [0, 0, 2, 0]
+    },
+    {
+      "node": 2,
+      "vehicle": 0,
+      "minute": 200,
+      "phase": "pickup",
+      "cargo": [0, 12, 0, 0]
+    },
+    {
+      "node": 8,
+      "vehicle": 0,
+      "minute": 470,
+      "phase": "delivery",
+      "cargo": [-20, 0, 0, -3]
+    },
+    {
+      "node": 1,
+      "vehicle": 1,
+      "minute": 133,
+      "phase": "pickup",
+      "cargo": [14, 0, 0, 0]
+    },
+    {
+      "node": 9,
+      "vehicle": 1,
+      "minute": 304,
+      "phase": "delivery",
+      "cargo": [0, 0, 0, -7]
+    },
+    {
+      "node": 7,
+      "vehicle": 1,
+      "minute": 406,
+      "phase": "delivery",
+      "cargo": [-1, 0, -1, -5]
+    },
+    {
+      "node": 10,
+      "vehicle": 1,
+      "minute": 490,
+      "phase": "delivery",
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "node": 3,
+      "vehicle": 2,
+      "minute": 35,
+      "phase": "pickup",
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "node": 9,
+      "vehicle": 2,
+      "minute": 443,
+      "phase": "delivery",
+      "cargo": [-10, 0, -2, 0]
+    },
+    {
+      "node": 10,
+      "vehicle": 2,
+      "minute": 472,
+      "phase": "delivery",
+      "cargo": [-4, -8, 0, 0]
+    },
+    {
+      "node": 1,
+      "vehicle": 3,
+      "minute": 133,
+      "phase": "pickup",
+      "cargo": [34, 0, 0, 0]
+    },
+    {
+      "node": 3,
+      "vehicle": 3,
+      "minute": 232,
+      "phase": "pickup",
+      "cargo": [0, 0, 0, 0]
+    },
+    {
+      "node": 6,
+      "vehicle": 3,
+      "minute": 480,
+      "phase": "delivery",
+      "cargo": [0, -4, 0, 0]
+    },
+    {
+      "node": 3,
+      "vehicle": 4,
+      "minute": 35,
+      "phase": "pickup",
+      "cargo": [0, 0, 14, 0]
+    },
+    {
+      "node": 4,
+      "vehicle": 4,
+      "minute": 128,
+      "phase": "pickup",
+      "cargo": [0, 0, 0, 50]
+    },
+    {
+      "node": 10,
+      "vehicle": 4,
+      "minute": 331,
+      "phase": "delivery",
+      "cargo": [0, 0, -8, -10]
+    },
+    {
+      "node": 6,
+      "vehicle": 4,
+      "minute": 381,
+      "phase": "delivery",
+      "cargo": [-12, 0, -5, -14]
+    },
+    {
+      "node": 5,
+      "vehicle": 4,
+      "minute": 453,
+      "phase": "delivery",
+      "cargo": [-1, 0, 0, -11]
+    }
+  ],
+  "transfers": [
+    {
+      "action": "unload",
+      "minute": 256,
+      "vehicle": 4,
+      "cargo": [0, 0, 14, 50]
+    },
+    {
+      "action": "unload",
+      "minute": 266,
+      "vehicle": 1,
+      "cargo": [14, 0, 0, 0]
+    },
+    {
+      "action": "load",
+      "minute": 266,
+      "vehicle": 1,
+      "cargo": [1, 0, 1, 12]
+    },
+    {
+      "action": "load",
+      "minute": 266,
+      "vehicle": 4,
+      "cargo": [13, 0, 13, 35]
+    },
+    {
+      "action": "unload",
+      "minute": 267,
+      "vehicle": 3,
+      "cargo": [34, 0, 0, 0]
+    },
+    {
+      "action": "unload",
+      "minute": 395,
+      "vehicle": 0,
+      "cargo": [0, 12, 2, 0]
+    },
+    {
+      "action": "load",
+      "minute": 405,
+      "vehicle": 0,
+      "cargo": [20, 0, 0, 3]
+    },
+    {
+      "action": "load",
+      "minute": 405,
+      "vehicle": 2,
+      "cargo": [14, 8, 2, 0]
+    },
+    {
+      "action": "load",
+      "minute": 405,
+      "vehicle": 3,
+      "cargo": [0, 4, 0, 0]
+    }
+  ]
+}

@@ -1,11 +1,15 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import Portfolio from "./Portfolio";
+import { routingLabRoute, visualizerRoute } from "./projectRoutes";
 
-const visualizerRoute = "#/projects/pso-sa";
-const Visualizer = lazy(() => import("./features/pso-sa/Visualizer"));
+const projectPages = new Map([
+  [visualizerRoute, lazy(() => import("./features/pso-sa/Visualizer"))],
+  [routingLabRoute, lazy(() => import("./features/mpvrpcd/RoutingLab"))],
+]);
 
 export default function App() {
   const [route, setRoute] = useState(window.location.hash);
+  const ProjectPage = projectPages.get(route);
 
   useEffect(() => {
     const update = () => setRoute(window.location.hash);
@@ -14,18 +18,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (route === visualizerRoute || route === "#/") {
+    if (ProjectPage || route === "#/") {
       window.scrollTo(0, 0);
     } else if (route.startsWith("#")) {
       document.getElementById(route.slice(1))?.scrollIntoView();
     }
-  }, [route]);
+  }, [ProjectPage, route]);
 
-  return route === visualizerRoute ? (
-    <Suspense fallback={<p className="p-8">Loading the visualizer…</p>}>
-      <Visualizer />
+  return ProjectPage ? (
+    <Suspense fallback={<p className="p-8">Loading the project…</p>}>
+      <ProjectPage />
     </Suspense>
   ) : (
-    <Portfolio visualizerHref={visualizerRoute} />
+    <Portfolio />
   );
 }

@@ -1,0 +1,396 @@
+.formulation-tour {
+  display: grid;
+  gap: clamp(1.6rem, 3vw, 2.8rem);
+}
+
+.formulation-overview,
+.formulation-topic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.formulation-topic {
+  border-top: 1px solid var(--portfolio-rule);
+  padding-top: clamp(1.3rem, 3vw, 2.4rem);
+}
+
+.formulation-objective {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  border-block-start: 1px solid var(--portfolio-rule);
+  padding-block-start: clamp(1.25rem, 3vw, 2rem);
+}
+
+.routing-section .formulation-objective-goal {
+  color: var(--portfolio-text);
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.formulation-copy,
+.formulation-visual,
+.formulation-findings {
+  display: grid;
+  gap: .65rem;
+  min-width: 0;
+}
+
+.formulation-copy h2 {
+  scroll-margin-top: 1.5rem;
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+}
+
+.formulation-copy p,
+.formulation-findings p {
+  max-width: 62ch;
+}
+
+.routing-section .formulation-contribution {
+  color: var(--portfolio-text);
+  font-weight: 500;
+}
+
+.formulation-index ul,
+.formulation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .2rem 1rem;
+}
+
+.formulation-index h2,
+.formulation-comparison h3 {
+  font-weight: 600;
+}
+
+.formulation-comparison {
+  display: grid;
+  gap: .6rem;
+  grid-column: 1 / -1;
+}
+
+.formulation-comparison th,
+.formulation-comparison td {
+  padding: .45rem .3rem;
+  text-align: start;
+  border-block-end: 1px solid var(--portfolio-rule);
+}
+
+.formulation-comparison thead th {
+  color: var(--portfolio-muted);
+  font-size: .82rem;
+  font-weight: 500;
+}
+
+.formulation-comparison tbody {
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.formulation-controls button {
+  min-height: 44px;
+  text-align: start;
+  color: var(--portfolio-muted);
+}
+
+.formulation-controls button[aria-pressed="true"] {
+  color: var(--portfolio-gold);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .3em;
+}
+
+.formulation-controls button:hover {
+  color: var(--portfolio-text);
+}
+
+.formulation-visual > p,
+.formulation-milestone {
+  font-size: .95rem;
+}
+
+.formulation-milestone p {
+  margin-top: .25rem;
+}
+
+.formulation-equations {
+  grid-column: 1 / -1;
+}
+
+.formulation-equations > summary {
+  width: fit-content;
+  min-height: 44px;
+  padding-block: .6rem;
+  color: var(--portfolio-gold);
+  cursor: pointer;
+}
+
+.formulation-topic-equations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  max-width: 62rem;
+  margin: .55rem auto 0;
+}
+
+.formulation-equation-list {
+  display: grid;
+  gap: .9rem;
+}
+
+.formulation-equation-list > .routing-text-action {
+  justify-self: start;
+}
+
+.formulation-symbols {
+  padding: .85rem 1rem;
+  background: var(--portfolio-panel);
+  border-radius: .65rem;
+}
+
+.formulation-symbols summary {
+  min-height: 44px;
+  align-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.formulation-symbol-preview {
+  display: none;
+}
+
+.formulation-symbols .routing-notation > div {
+  grid-template-columns: minmax(5rem, auto) minmax(0, 1fr);
+  font-size: .9rem;
+  border-radius: .25rem;
+}
+
+.formulation-symbols .routing-notation dd {
+  line-height: 1.5;
+}
+
+.formulation-symbols button,
+.formulation-equation-list [data-equation-symbol] {
+  cursor: pointer;
+}
+
+.formulation-equation-list [data-equation-symbol]:hover,
+.formulation-equation-list [data-highlighted] {
+  background: var(--portfolio-gold);
+  color: var(--portfolio-background);
+  border-radius: .15em;
+}
+
+.formulation-symbols [data-highlighted] {
+  outline: 1px solid var(--portfolio-gold);
+  outline-offset: .25rem;
+}
+
+.formulation-symbols [data-highlighted] dt,
+.formulation-symbols [data-highlighted] dd {
+  color: var(--portfolio-text);
+}
+
+.formulation-current-symbol {
+  position: sticky;
+  bottom: .5rem;
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem .75rem;
+  background: var(--portfolio-panel);
+  border: 1px solid var(--portfolio-gold);
+  border-radius: .4rem;
+  z-index: 1;
+}
+
+.formulation-current-symbol button {
+  min-width: 2rem;
+  min-height: 2rem;
+  font-size: 1.25rem;
+}
+
+.lesson-map {
+  min-width: 0;
+}
+
+.lesson-map > svg {
+  display: block;
+  width: 100%;
+  border-radius: .65rem;
+  background: var(--portfolio-panel);
+}
+
+.lesson-map text {
+  fill: var(--portfolio-text);
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.lesson-map-path {
+  stroke-width: 3.5;
+}
+
+.lesson-map-pickup {
+  stroke-dasharray: 7 6;
+}
+
+.lesson-map-path[data-muted="true"] {
+  opacity: .3;
+}
+
+.lesson-map figcaption,
+.lesson-map figcaption span,
+.lesson-assignment,
+.formulation-check {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+
+.lesson-map figcaption {
+  gap: .35rem 1rem;
+  margin-top: .5rem;
+  color: var(--portfolio-muted);
+  font-size: .875rem;
+}
+
+.lesson-map-dashed {
+  width: 1.2rem;
+  border-top: 2px dashed var(--portfolio-control);
+}
+
+.lesson-assignment select {
+  min-height: 44px;
+  padding-inline: .6rem;
+  border: 1px solid var(--portfolio-control);
+  border-radius: .4rem;
+  background: var(--portfolio-background);
+}
+
+.formulation-check {
+  min-height: 44px;
+}
+
+.formulation-check input {
+  flex: 0 0 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--portfolio-gold);
+}
+
+.formulation-range {
+  display: grid;
+}
+
+.formulation-meter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .25rem .65rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.formulation-meter > :nth-child(2) {
+  text-align: end;
+}
+
+.formulation-meter > div {
+  position: relative;
+  grid-column: 1 / -1;
+  height: .65rem;
+  background: var(--portfolio-panel);
+  border-radius: .25rem;
+}
+
+.formulation-meter i {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  border-radius: inherit;
+  background: var(--portfolio-highlight);
+}
+
+.formulation-meter i[data-variant="load"] {
+  background: var(--portfolio-gold);
+}
+
+.formulation-timeline b {
+  position: absolute;
+  top: 50%;
+  width: .45rem;
+  height: .45rem;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: var(--portfolio-background);
+}
+
+.formulation-products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem 1rem;
+}
+
+.formulation-products > div {
+  display: grid;
+  gap: .25rem;
+}
+
+.formulation-products h4 {
+  font-weight: 600;
+}
+
+.formulation-findings {
+  max-width: 43rem;
+  margin-inline: auto;
+}
+
+.formulation-findings button {
+  justify-self: start;
+}
+
+@media (min-width: 800px) {
+  .formulation-overview,
+  .formulation-topic {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    column-gap: clamp(2rem, 5vw, 4.25rem);
+  }
+
+  .formulation-overview {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  }
+
+  .formulation-topic-equations {
+    grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .formulation-equation-list {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .formulation-symbols {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  .formulation-symbol-preview {
+    display: block;
+    padding-block: .55rem;
+    border-top: 1px solid var(--portfolio-rule);
+  }
+
+  .formulation-current-symbol {
+    display: none;
+  }
+}

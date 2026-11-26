@@ -1,0 +1,429 @@
+.routing-lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  width: min(100% - 2rem, 66rem);
+  margin-inline: auto;
+  padding: .85rem 0 3rem;
+}
+
+.routing-nav,
+.routing-playback-row,
+.routing-jumps,
+.routing-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem 1rem;
+}
+
+.routing-nav {
+  justify-content: space-between;
+  column-gap: .6rem;
+}
+
+.routing-nav a,
+.routing-nav-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: underline;
+  font-size: .85rem;
+}
+
+.routing-nav-action {
+  margin-inline-start: auto;
+}
+
+.routing-nav-action {
+  color: var(--portfolio-gold);
+  text-underline-offset: .2em;
+}
+
+.routing-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.routing-header {
+  display: grid;
+  gap: .6rem;
+  max-width: 41rem;
+}
+
+.routing-kicker {
+  color: var(--portfolio-gold);
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.routing-header h1 {
+  font-size: clamp(1.55rem, 5vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.routing-section p,
+.routing-events span {
+  color: var(--portfolio-muted);
+}
+
+.routing-section p {
+  line-height: 1.7;
+}
+
+.routing-run > a {
+  display: inline-block;
+  margin-top: .65rem;
+  text-decoration: underline;
+}
+
+.routing-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.25rem, 4vw, 3rem);
+}
+
+.routing-replay-sidebar {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.routing-section h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.routing-replay {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.routing-replay > button {
+  justify-self: start;
+}
+
+.routing-example p {
+  max-width: 78ch;
+  margin-top: .3rem;
+}
+
+.routing-legend,
+.routing-events span,
+.routing-run dt {
+  font-size: .875rem;
+  color: var(--portfolio-muted);
+}
+
+.routing-map {
+  display: block;
+  width: 100%;
+  border-radius: .6rem;
+  background: var(--portfolio-panel);
+}
+
+.routing-stop-picker {
+  display: none;
+}
+
+.routing-map-regions text {
+  font-size: 19px;
+  fill: var(--portfolio-muted);
+  text-anchor: middle;
+}
+
+.routing-track {
+  stroke-width: 2;
+  opacity: .26;
+}
+
+.routing-trail,
+.routing-active-leg {
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.routing-trail {
+  opacity: .72;
+}
+
+.routing-node {
+  color: var(--portfolio-text);
+  cursor: pointer;
+}
+
+.routing-node:hover,
+.routing-node:focus-visible,
+.routing-node[aria-pressed="true"] {
+  color: var(--portfolio-gold);
+}
+
+.routing-node text {
+  fill: currentColor;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: 20px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.routing-legend {
+  margin-top: .6rem;
+}
+
+.routing-legend li {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.routing-truck-key {
+  flex: 0 0 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.routing-playback {
+  display: grid;
+  gap: .45rem;
+}
+
+.routing-playback-row {
+  font-size: .9rem;
+}
+
+.routing-lab button.routing-primary-action {
+  justify-self: start;
+  background: var(--portfolio-gold);
+  color: var(--portfolio-background);
+}
+
+.routing-lab button.routing-primary-action:hover {
+  background: var(--portfolio-gold-hover);
+}
+
+.routing-playback output {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-playback input {
+  width: 100%;
+}
+
+.routing-text-action {
+  min-height: 44px;
+  color: var(--portfolio-gold);
+  text-align: start;
+  text-decoration: underline;
+  text-underline-offset: .25em;
+  font-weight: 500;
+}
+
+.routing-text-action:hover {
+  color: var(--portfolio-text);
+}
+
+.routing-inspector p {
+  margin-block: .3rem .7rem;
+}
+
+.routing-events li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .4rem;
+  padding-block: .45rem;
+}
+
+.routing-events strong,
+.routing-events span {
+  display: block;
+}
+
+.routing-events strong {
+  font-size: .94rem;
+  font-weight: 600;
+}
+
+.routing-events button {
+  white-space: nowrap;
+  font-size: .875rem;
+}
+
+.routing-run dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 2rem;
+  margin-block: .6rem;
+}
+
+.routing-run dd {
+  font-weight: 600;
+}
+
+.routing-equations {
+  display: grid;
+  gap: .85rem;
+  margin-block: .7rem;
+  list-style: none;
+}
+
+.routing-equation {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: .5rem;
+}
+
+.routing-equation-number {
+  color: var(--portfolio-gold);
+  font-size: .875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-equation-body > p:first-child {
+  color: var(--portfolio-text);
+}
+
+.routing-equation-body {
+  container-type: inline-size;
+}
+
+.routing-equation-formula,
+.routing-equation-condition {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.routing-equation-formula {
+  font-size: 1rem;
+  font-size: clamp(.875rem, 4cqi, 1rem);
+}
+
+.routing-equation-formula .katex-html,
+.routing-equation-condition .katex-html {
+  display: inline-block;
+}
+
+.routing-equation-formula .katex-display,
+.routing-equation-formula .katex-display > .katex {
+  text-align: start;
+}
+
+.routing-equation-formula .katex-display {
+  margin: .25rem 0;
+}
+
+.routing-equation-condition,
+.routing-equation-note {
+  font-size: .875rem;
+}
+
+.routing-equation-translation > summary {
+  width: fit-content;
+  padding-block: .5rem;
+  color: var(--portfolio-gold);
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.routing-equation-translation > div {
+  display: grid;
+  gap: .6rem;
+  max-width: 64ch;
+  padding-inline-start: .85rem;
+  border-inline-start: 2px solid var(--portfolio-rule);
+}
+
+.routing-equation-translation .katex {
+  white-space: nowrap;
+}
+
+.routing-notation {
+  display: grid;
+  gap: .7rem;
+  margin-top: .6rem;
+}
+
+.routing-notation > div {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(0, 2.5fr);
+  gap: .3rem 1rem;
+}
+
+.routing-notation dd {
+  color: var(--portfolio-muted);
+}
+
+@media (min-width: 761px) {
+  .routing-lab {
+    width: min(100% - clamp(4rem, 9vw, 9rem), 68rem);
+    gap: clamp(3rem, 4.6vw, 4.5rem);
+    padding: 1.25rem 0 5rem;
+  }
+
+  .routing-header {
+    gap: .85rem;
+    width: min(100%, 53rem);
+    max-width: none;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .routing-layout {
+    column-gap: clamp(2.75rem, 5vw, 5rem);
+  }
+
+  .routing-replay-sidebar {
+    gap: 2rem;
+  }
+
+  .routing-events li {
+    padding-block: .8rem;
+  }
+
+  .routing-notation {
+    gap: .9rem;
+  }
+
+  .routing-equations {
+    gap: 1.3rem;
+    margin-block: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .routing-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .routing-stop-picker {
+    display: grid;
+    gap: .25rem;
+    margin-bottom: .65rem;
+  }
+
+  .routing-stop-picker select {
+    min-height: 44px;
+    padding: .35rem .6rem;
+    border: 1px solid var(--portfolio-control);
+    border-radius: .4rem;
+    background: var(--portfolio-background);
+  }
+
+  .routing-map-regions text {
+    font-size: 23px;
+  }
+
+  .routing-node text {
+    font-size: 24px;
+  }
+}

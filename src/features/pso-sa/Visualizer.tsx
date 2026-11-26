@@ -20,9 +20,9 @@ function Convergence({history}: {history: number[]}) {
   const lo=Math.min(...history),hi=Math.max(...history),span=Math.max(hi-lo,1e-12);
   const points=history.map((v,i)=>`${40+i/Math.max(1,history.length-1)*620},${130-(v-lo)/span*100}`).join(' ');
   return <div className="viz-chart"><div className="viz-panel-heading"><h2>Best value over time</h2><span>one point per temperature level</span></div><svg viewBox="0 0 700 165" role="img" aria-label={`Best objective value changed from ${format(history[0])} to ${format(history[history.length-1])}`}>
-    <path d="M40 25V130H660" fill="none" stroke="#604b5c"/>
-    <polyline points={points} stroke="#fc9581" strokeWidth="2.5" fill="none"/>
-    <circle cx={history.length===1?40:660} cy={130-(history[history.length-1]-lo)/span*100} r="4" fill="#fc9581"/>
+    <path d="M40 25V130H660" fill="none" stroke="var(--portfolio-control)"/>
+    <polyline points={points} stroke="var(--portfolio-gold)" strokeWidth="2.5" fill="none"/>
+    <circle cx={history.length===1?40:660} cy={130-(history[history.length-1]-lo)/span*100} r="4" fill="var(--portfolio-gold)"/>
     <text x="40" y="17">{format(hi)}</text><text x="40" y="152">{format(lo)}</text><text x="660" y="152" textAnchor="end">Level {history.length-1}</text>
   </svg></div>;
 }
