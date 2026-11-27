@@ -20,7 +20,7 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: system-ui, sans-serif;
   background: var(--portfolio-background);
   color: var(--portfolio-text);
 }

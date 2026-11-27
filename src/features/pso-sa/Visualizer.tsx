@@ -55,8 +55,7 @@ export default function Visualizer() {
   const change=<K extends keyof Parameters>(key:K,value:Parameters[K])=>reset({...parameters,[key]:value});
   const progress=snapshot.steps/(parameters.iterations*parameters.attempts)*100;
   return <main className="viz-page">
-    <nav className="viz-topbar"><a href="#/">← Back to portfolio</a><a href="https://github.com/AnotherWhale/PSO-SA" target="_blank" rel="noreferrer">Source on GitHub ↗</a></nav>
-    <header className="viz-header"><span className="viz-eyebrow">University project · Interactive demo</span><h1>PSO–SA playground</h1><p>Watch a swarm search for a better solution. Change the landscape, adjust the parameters, and see what happens.</p></header>
+    <header className="viz-header"><span className="viz-eyebrow">University project · Interactive demo</span><h1>PSO–SA playground</h1><p>Compare particle swarm optimization with and without simulated annealing.</p><div className="portfolio-actions"><a className="portfolio-button portfolio-button-secondary" href="https://github.com/AnotherWhale/PSO-SA" target="_blank" rel="noreferrer">Source on GitHub</a></div></header>
     <div className="viz-layout">
       <aside className="viz-settings" aria-label="Algorithm settings">
         <h2>Set up the search</h2>

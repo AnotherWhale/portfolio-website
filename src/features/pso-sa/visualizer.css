@@ -1,7 +1,6 @@
 .viz-page { max-width: 1440px; margin: auto; padding: 24px clamp(16px,4vw,56px) 64px; color: var(--portfolio-text); }
-.viz-topbar { display:flex; justify-content:space-between; gap:16px; font-size: .85rem; }
-.viz-topbar a,.viz-explanation a { color:var(--portfolio-highlight); text-decoration:underline; text-underline-offset:4px; }
-.viz-header { padding:48px 0 32px; max-width:740px; }
+.viz-explanation a { color:var(--portfolio-highlight); text-decoration:underline; text-underline-offset:4px; }
+.viz-header { padding:20px 0 32px; max-width:740px; }
 .viz-eyebrow { color:var(--portfolio-gold); font-size:.8rem; letter-spacing:.09em; text-transform:uppercase; }
 .viz-header h1 { font-size:clamp(2rem,5vw,3.5rem); font-weight:600; line-height:1.15; margin:12px 0 18px; }
 .viz-header p { line-height:1.7; color:var(--portfolio-muted); }
@@ -56,4 +55,4 @@
 .viz-explanation h3 { margin-top:24px; font-size:.95rem; font-weight:600; color:var(--portfolio-gold); }
 .viz-notice { color:var(--portfolio-error); font-size:.8rem; padding:20px 0; }
 @media(max-width:900px) { .viz-layout { grid-template-columns:240px minmax(0,1fr); gap:16px; }.viz-settings,.viz-stage { padding:16px; }.viz-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }.viz-panel-heading { flex-wrap:wrap; } }
-@media(max-width:700px) { .viz-layout { display:flex; flex-direction:column; }.viz-settings,.viz-workspace { width:100%; }.viz-settings { order:2; }.viz-header { padding:32px 0 24px; }.viz-topbar { font-size:.7rem; }.viz-stage-foot { align-items:flex-start; flex-direction:column; }.viz-chart .viz-panel-heading span { display:none; }.viz-playback { padding:16px; }.viz-landscape { height:320px; } }
+@media(max-width:700px) { .viz-layout { display:flex; flex-direction:column; }.viz-settings,.viz-workspace { width:100%; }.viz-settings { order:2; }.viz-header { padding:0 0 24px; }.viz-stage-foot { align-items:flex-start; flex-direction:column; }.viz-chart .viz-panel-heading span { display:none; }.viz-playback { padding:16px; }.viz-landscape { height:320px; } }

@@ -9,7 +9,6 @@
   --routing-type-body: 1.0625rem;
   --routing-type-label: .9375rem;
   --routing-type-caption: .875rem;
-  font-family: system-ui, sans-serif;
   font-size: var(--routing-type-body);
   line-height: 1.55;
   display: grid;
@@ -17,10 +16,9 @@
   gap: clamp(1rem, 2.5vw, 2.5rem);
   width: min(100% - 2rem, 66rem);
   margin-inline: auto;
-  padding: .85rem 0 3rem;
+  padding: 1.35rem 0 3rem;
 }
 
-.routing-nav,
 .routing-playback-row,
 .routing-jumps,
 .routing-legend {
@@ -28,29 +26,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: .4rem 1rem;
-}
-
-.routing-nav {
-  justify-content: space-between;
-  column-gap: .6rem;
-}
-
-.routing-nav a,
-.routing-nav-action {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  text-decoration: underline;
-  font-size: var(--routing-type-label);
-}
-
-.routing-nav-action {
-  margin-inline-start: auto;
-}
-
-.routing-nav-action {
-  color: var(--portfolio-gold);
-  text-underline-offset: .2em;
 }
 
 .routing-header {
@@ -596,7 +571,7 @@
   .routing-lab {
     width: min(100% - clamp(4rem, 9vw, 9rem), 68rem);
     gap: clamp(3rem, 4.6vw, 4.5rem);
-    padding: 1.25rem 0 5rem;
+    padding: 2rem 0 5rem;
   }
 
   .routing-layout {

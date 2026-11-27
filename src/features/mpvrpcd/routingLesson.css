@@ -533,8 +533,8 @@
     grid-column: 2;
     grid-row: 1;
     position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
+    top: calc(var(--portfolio-header-height) + 1rem);
+    max-height: calc(100vh - var(--portfolio-header-height) - 2rem);
     overflow-y: auto;
   }
 

@@ -67,73 +67,67 @@ export default function RoutingLab() {
   };
 
   return (
-    <div className="portfolio">
-      <main className="routing-lab">
-        <nav className="routing-nav" aria-label="Thesis project links">
-          <a href="#projects">Back to work</a>
-          <button className="routing-nav-action" type="button" onClick={showEquations}>Model equations</button>
-        </nav>
+    <main className="routing-lab">
+      <header className="routing-header">
+        <p className="routing-kicker">Vehicle routing research · IEOM 2022</p>
+        <h1>Vehicle routing with cross-docking</h1>
+        <div className="routing-intro">
+          <section aria-labelledby="vrp-definition">
+            <h2 id="vrp-definition">What is a vehicle routing problem?</h2>
+            <p>A vehicle routing problem (VRP) assigns customers to vehicles and puts each vehicle’s stops in order. A common goal is to minimize total distance while respecting limits such as vehicle capacity.</p>
+          </section>
+          <section aria-labelledby="vrp-model">
+            <h2 id="vrp-model">What does the thesis model?</h2>
+            <p>Trucks transfer goods at a cross-dock, where pickups are sorted and reloaded for delivery. The model minimizes travel and truck hire costs while allowing split loads, different truck sizes, and staggered departures.</p>
+          </section>
+        </div>
+        <div className="routing-intro-actions">
+          <button className="portfolio-button routing-primary-action" type="button" onClick={showLesson}>Worked example</button>
+          <button className="routing-text-action" type="button" onClick={showReplay}>Replay</button>
+          <button className="routing-text-action" type="button" onClick={showEquations}>Model equations</button>
+          <a href={paper} target="_blank" rel="noreferrer">Read the paper</a>
+        </div>
+      </header>
 
-        <header className="routing-header">
-          <p className="routing-kicker">Vehicle routing research · IEOM 2022</p>
-          <h1>Vehicle routing with cross-docking</h1>
-          <div className="routing-intro">
-            <section aria-labelledby="vrp-definition">
-              <h2 id="vrp-definition">What is a vehicle routing problem?</h2>
-              <p>A vehicle routing problem (VRP) assigns customers to vehicles and puts each vehicle’s stops in order. A common goal is to minimize total distance while respecting limits such as vehicle capacity.</p>
-            </section>
-            <section aria-labelledby="vrp-model">
-              <h2 id="vrp-model">What does the thesis model?</h2>
-              <p>Trucks transfer goods at a cross-dock, where pickups are sorted and reloaded for delivery. The model minimizes travel and truck hire costs while allowing split loads, different truck sizes, and staggered departures.</p>
-            </section>
-          </div>
-          <div className="routing-intro-actions">
-            <button className="portfolio-button routing-primary-action" type="button" onClick={showLesson}>Worked example</button>
-            <button className="routing-text-action" type="button" onClick={showReplay}>Replay</button>
-            <a href={paper} target="_blank" rel="noreferrer">Read the paper</a>
-          </div>
-        </header>
+      <FormulationTour paperHref={paper} />
 
-        <FormulationTour paperHref={paper} />
+      <section className="routing-replay" aria-labelledby="routing-example-title">
+        <div className="routing-section routing-example">
+          <h2 id="routing-example-title" ref={replayHeadingRef} tabIndex={-1}>Benchmark replay</h2>
+          <p>This saved benchmark run uses five trucks. Two of them deliver portions of Customer 9’s order. The notebook’s objective is to minimize the time at which the last truck returns. The published model uses a cost objective.</p>
+        </div>
 
-        <section className="routing-replay" aria-labelledby="routing-example-title">
-          <div className="routing-section routing-example">
-            <h2 id="routing-example-title" ref={replayHeadingRef} tabIndex={-1}>Benchmark replay</h2>
-            <p>This saved benchmark run uses five trucks. Two of them deliver portions of Customer 9’s order. The notebook’s objective is to minimize the time at which the last truck returns. The published model uses a cost objective.</p>
+        <div className="routing-layout">
+          <div className="routing-section">
+            <ReplayFulfillment snapshot={snapshot} />
+            <PeriodPlayback minute={minute} playing={isPlaying} onToggle={togglePlayback} onSeek={seek}
+              onFirstDelivery={showFirstDelivery}>
+              <RouteMap minute={minute} snapshot={snapshot} selectedNode={selectedNode} onSelect={setSelectedNode} />
+            </PeriodPlayback>
+            <ReplayInventory snapshot={snapshot} />
           </div>
-
-          <div className="routing-layout">
-            <div className="routing-section">
-              <ReplayFulfillment snapshot={snapshot} />
-              <PeriodPlayback minute={minute} playing={isPlaying} onToggle={togglePlayback} onSeek={seek}
-                onFirstDelivery={showFirstDelivery}>
-                <RouteMap minute={minute} snapshot={snapshot} selectedNode={selectedNode} onSelect={setSelectedNode} />
-              </PeriodPlayback>
-              <ReplayInventory snapshot={snapshot} />
-            </div>
-            <div className="routing-replay-sidebar">
-              <StopDetails node={selectedNode} snapshot={snapshot} onSeek={seek} />
-            </div>
+          <div className="routing-replay-sidebar">
+            <StopDetails node={selectedNode} snapshot={snapshot} onSeek={seek} />
           </div>
-          <details className="routing-section routing-run formulation-equations">
-            <summary>Notebook run details</summary>
-            <dl>
-              <div><dt>Test case</dt><dd>10-{run.instance}</dd></div>
-              <div><dt>Last truck return</dt><dd>{Math.round(run.objective)} min</dd></div>
-              <div><dt>Optimality gap</dt><dd>{run.gap.toFixed(1)}%</dd></div>
-            </dl>
-            <p>Gurobi calculated a lower bound on the best possible return time. The optimality gap expresses the difference between the return time of the computed solution and that bound as a percentage of the computed return time.</p>
-            <a href={notebook} target="_blank" rel="noreferrer">View the notebook</a>
-            <details className="formulation-equations">
-              <summary>View the replay objective</summary>
-              <Suspense fallback={<p>Loading the replay objective…</p>}>
-                <ReplayObjective />
-              </Suspense>
-            </details>
+        </div>
+        <details className="routing-section routing-run formulation-equations">
+          <summary>Notebook run details</summary>
+          <dl>
+            <div><dt>Test case</dt><dd>10-{run.instance}</dd></div>
+            <div><dt>Last truck return</dt><dd>{Math.round(run.objective)} min</dd></div>
+            <div><dt>Optimality gap</dt><dd>{run.gap.toFixed(1)}%</dd></div>
+          </dl>
+          <p>Gurobi calculated a lower bound on the best possible return time. The optimality gap expresses the difference between the return time of the computed solution and that bound as a percentage of the computed return time.</p>
+          <a href={notebook} target="_blank" rel="noreferrer">View the notebook</a>
+          <details className="formulation-equations">
+            <summary>View the replay objective</summary>
+            <Suspense fallback={<p>Loading the replay objective…</p>}>
+              <ReplayObjective />
+            </Suspense>
           </details>
-        </section>
-        <FormulationAppendix />
-      </main>
-    </div>
+        </details>
+      </section>
+      <FormulationAppendix />
+    </main>
   );
 }
