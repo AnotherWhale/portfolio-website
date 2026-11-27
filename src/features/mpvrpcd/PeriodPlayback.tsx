@@ -16,7 +16,7 @@ export default function PeriodPlayback({ minute, playing, onToggle, onSeek, onFi
           {playing ? "Pause" : minute === run.duration ? "Replay" : "Play"}
         </button>
         <button className="routing-text-action" type="button" onClick={onFirstDelivery}>First delivery to Customer 9</button>
-        <output htmlFor="routing-minute" aria-label="Replay minute" aria-live="off">{Math.round(minute)} / {run.duration} min</output>
+        <output htmlFor="routing-minute" aria-label="Replay minute" aria-live="off">{Math.floor(minute)} / {run.duration} min</output>
       </div>
       {children}
       <input
@@ -25,9 +25,9 @@ export default function PeriodPlayback({ minute, playing, onToggle, onSeek, onFi
         type="range"
         min={0}
         max={run.duration}
-        value={Math.round(minute)}
+        value={Math.floor(minute)}
         step={1}
-        aria-valuetext={`${Math.round(minute)} minutes`}
+        aria-valuetext={`${Math.floor(minute)} minutes`}
         onChange={(event) => onSeek(Number(event.currentTarget.value))}
       />
       <div className="routing-jumps" aria-label="Jump to delivery wave" role="group">

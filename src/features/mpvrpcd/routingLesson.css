@@ -1,120 +1,421 @@
-.formulation-tour {
+.formulation-tour,
+.routing-lesson,
+.routing-appendix {
   display: grid;
-  gap: clamp(1.6rem, 3vw, 2.8rem);
-}
-
-.formulation-overview,
-.formulation-topic {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-  align-items: start;
-}
-
-.formulation-topic {
-  border-top: 1px solid var(--portfolio-rule);
-  padding-top: clamp(1.3rem, 3vw, 2.4rem);
-}
-
-.formulation-objective {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-  border-block-start: 1px solid var(--portfolio-rule);
-  padding-block-start: clamp(1.25rem, 3vw, 2rem);
-}
-
-.routing-section .formulation-objective-goal {
-  color: var(--portfolio-text);
-  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.formulation-copy,
-.formulation-visual,
-.formulation-findings {
-  display: grid;
-  gap: .65rem;
+  gap: clamp(.9rem, 2.5vw, 2rem);
   min-width: 0;
 }
 
-.formulation-copy h2 {
-  scroll-margin-top: 1.5rem;
-  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+.routing-lesson > header {
+  display: grid;
+  gap: .4rem;
+  max-width: 64ch;
 }
 
-.formulation-copy p,
-.formulation-findings p {
-  max-width: 62ch;
+.routing-lesson h2,
+.routing-findings h2,
+.routing-replay h2,
+.routing-appendix h2 {
+  font-size: var(--routing-type-section);
+  font-weight: 600;
+  line-height: 1.25;
+  scroll-margin-top: 1.25rem;
 }
 
-.routing-section .formulation-contribution {
-  color: var(--portfolio-text);
-  font-weight: 500;
+.routing-chapter,
+.routing-findings {
+  display: grid;
+  gap: .65rem;
+  align-items: start;
+  border-top: 1px solid var(--portfolio-rule);
+  padding-top: clamp(.85rem, 2.5vw, 1.75rem);
 }
 
-.formulation-index ul,
-.formulation-controls {
+.routing-chapter > div:first-child,
+.routing-findings > div {
+  display: grid;
+  gap: .5rem;
+}
+
+.routing-chapter h3 {
+  font-size: var(--routing-type-headline);
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.routing-demo {
+  display: grid;
+  min-width: 0;
+  gap: .65rem;
+  padding: clamp(.7rem, 2vw, 1.1rem);
+  border: 1px solid var(--portfolio-rule);
+  border-radius: .75rem;
+  background: var(--portfolio-panel);
+}
+
+.routing-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.routing-options button {
+  padding: .25rem .65rem;
+  min-height: 44px;
+  border: 1px solid var(--portfolio-control);
+  border-radius: .4rem;
+  background: var(--portfolio-background);
+  text-align: start;
+  font-size: var(--routing-type-label);
+  font-weight: 600;
+}
+
+.routing-options button[aria-pressed="true"] {
+  border-color: var(--portfolio-highlight);
+  background: var(--portfolio-highlight);
+  color: var(--portfolio-background);
+}
+
+.routing-options button:hover {
+  border-color: var(--portfolio-highlight);
+}
+
+.routing-demo-map {
+  width: 100%;
+  max-height: 17rem;
+  background: var(--portfolio-background);
+  border-radius: .45rem;
+}
+
+.routing-demo-map polyline {
+  stroke: var(--portfolio-highlight);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.routing-demo-map text {
+  fill: var(--portfolio-text);
+  stroke: var(--portfolio-background);
+  stroke-width: 3px;
+  paint-order: stroke;
+  font-size: 12px;
+}
+
+.routing-stop-number circle {
+  fill: var(--portfolio-highlight);
+  stroke: var(--portfolio-background);
+}
+
+.routing-stop-number text {
+  fill: var(--portfolio-background);
+  stroke: none;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.routing-demo-controls,
+.routing-carton-key {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: .2rem 1rem;
+  gap: .35rem .75rem;
+  font-size: var(--routing-type-label);
 }
 
-.formulation-index h2,
-.formulation-comparison h3 {
-  font-weight: 600;
+.routing-lesson-icon {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--portfolio-highlight);
 }
 
-.formulation-comparison {
-  display: grid;
-  gap: .6rem;
-  grid-column: 1 / -1;
+.routing-section .routing-demo-result {
+  padding-top: .65rem;
+  border-top: 1px solid var(--portfolio-control);
+  line-height: 1.5;
 }
 
-.formulation-comparison th,
-.formulation-comparison td {
-  padding: .45rem .3rem;
-  text-align: start;
-  border-block-end: 1px solid var(--portfolio-rule);
-}
-
-.formulation-comparison thead th {
-  color: var(--portfolio-muted);
-  font-size: .82rem;
-  font-weight: 500;
-}
-
-.formulation-comparison tbody {
-  font-size: .9rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.formulation-controls button {
-  min-height: 44px;
-  text-align: start;
-  color: var(--portfolio-muted);
-}
-
-.formulation-controls button[aria-pressed="true"] {
-  color: var(--portfolio-gold);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: .3em;
-}
-
-.formulation-controls button:hover {
+.routing-demo-result strong {
   color: var(--portfolio-text);
 }
 
-.formulation-visual > p,
-.formulation-milestone {
-  font-size: .95rem;
+.routing-dock-flow,
+.routing-truck-loads {
+  display: grid;
+  gap: .5rem;
+  font-size: var(--routing-type-label);
 }
 
-.formulation-milestone p {
-  margin-top: .25rem;
+.routing-dock-flow li,
+.routing-truck-loads > div {
+  display: grid;
+  gap: .25rem;
+  align-content: start;
+  padding: .45rem .55rem;
+  border-radius: .4rem;
+  background: var(--portfolio-background);
+}
+
+.routing-dock-flow span,
+.routing-truck-loads dt {
+  color: var(--portfolio-muted);
+}
+
+.routing-dock-flow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(.6rem, 2.5vw, 1.4rem);
+}
+
+.routing-dock-flow li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.routing-dock-flow li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset: 50% -.46rem auto auto;
+  width: .35rem;
+  height: .35rem;
+  border: solid var(--portfolio-highlight);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.routing-dock-flow li:nth-child(2) {
+  border-inline-start: 3px solid var(--portfolio-highlight);
+}
+
+.routing-wave-vehicle {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.routing-truck-loads {
+  background: var(--portfolio-background);
+  border-radius: .4rem;
+  gap: 0;
+}
+
+.routing-truck-loads > div + div {
+  border-block-start: 1px solid var(--portfolio-rule);
+}
+
+.routing-truck-loads dt strong {
+  color: var(--portfolio-text);
+}
+
+.routing-truck-loads dd {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--portfolio-muted);
+}
+
+.routing-truck-loads dd > span {
+  flex: 0 0 auto;
+}
+
+.routing-carton-stack {
+  display: block;
+  width: min(100%, 7rem);
+  margin-block-start: auto;
+}
+
+.routing-pallet,
+.routing-truck-body,
+.routing-truck-window,
+.routing-truck-wheel {
+  fill: var(--portfolio-panel);
+  stroke: var(--portfolio-control);
+  stroke-linejoin: round;
+}
+
+.routing-carton {
+  fill: var(--portfolio-highlight);
+  stroke: var(--portfolio-background);
+  stroke-width: .8;
+}
+
+.routing-carton[data-product="B"] {
+  fill: var(--portfolio-gold);
+}
+
+.routing-carton-tape {
+  fill: none;
+}
+
+.routing-truck-diagram {
+  display: block;
+  width: min(100%, 17rem);
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.routing-truck-wheel,
+.routing-truck-window {
+  fill: var(--portfolio-background);
+}
+
+.routing-empty-slot {
+  fill: none;
+  stroke: var(--portfolio-control);
+  stroke-width: .6;
+  stroke-dasharray: 2 1;
+}
+
+.routing-carton-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.routing-carton-key svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.routing-wave-track {
+  position: relative;
+  display: block;
+  height: .5rem;
+  background: var(--portfolio-rule);
+  border-radius: .25rem;
+}
+
+.routing-wave-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--portfolio-highlight);
+}
+
+.routing-wave-row:nth-child(2) i {
+  background: var(--portfolio-gold);
+}
+
+.routing-wave-chart,
+.routing-wave-row {
+  display: grid;
+  gap: .65rem;
+  font-size: var(--routing-type-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-wave-row {
+  gap: .2rem;
+}
+
+.routing-wave-row span {
+  color: var(--portfolio-muted);
+}
+
+.routing-wave-track {
+  margin-block: .55rem;
+}
+
+.routing-wave-track i,
+.routing-wave-arrival {
+  position: absolute;
+}
+
+.routing-wave-arrival {
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  transform: translate(-50%, -50%);
+  border-radius: .25rem;
+  background: var(--portfolio-background);
+}
+
+.routing-wave-arrival .routing-lesson-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--portfolio-text);
+}
+
+.routing-time-axis {
+  display: flex;
+  justify-content: space-between;
+  border-block-start: 1px solid var(--portfolio-control);
+  color: var(--portfolio-muted);
+}
+
+.routing-time-axis span {
+  position: relative;
+  padding-block-start: .3rem;
+}
+
+.routing-time-axis span::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 50%;
+  height: .25rem;
+  border-inline-start: 1px solid var(--portfolio-control);
+}
+
+.routing-wave-table {
+  width: 100%;
+  text-align: start;
+  font-size: var(--routing-type-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-wave-table caption {
+  padding-bottom: .3rem;
+  color: var(--portfolio-muted);
+  text-align: start;
+}
+
+.routing-wave-table th,
+.routing-wave-table td {
+  padding: .45rem .35rem;
+  text-align: start;
+  border-bottom: 1px solid var(--portfolio-control);
+}
+
+.routing-wave-table th {
+  font-weight: 500;
+}
+
+.routing-lesson-cost p {
+  margin-top: .65rem;
+}
+
+.routing-findings a {
+  width: fit-content;
+  text-decoration: underline;
+}
+
+.routing-appendix {
+  gap: 0;
+}
+
+.routing-appendix > p {
+  margin-block: .35rem .8rem;
+}
+
+.routing-appendix > details {
+  border-top: 1px solid var(--portfolio-rule);
+}
+
+@media (min-width: 760px) {
+  .routing-chapter,
+  .routing-findings {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .routing-dock-flow li:not(:last-child)::after {
+    inset-inline-end: -.8rem;
+  }
+
 }
 
 .formulation-equations {
@@ -166,7 +467,7 @@
 
 .formulation-symbols .routing-notation > div {
   grid-template-columns: minmax(5rem, auto) minmax(0, 1fr);
-  font-size: .9rem;
+  font-size: var(--routing-type-label);
   border-radius: .25rem;
 }
 
@@ -216,154 +517,7 @@
   font-size: 1.25rem;
 }
 
-.lesson-map {
-  min-width: 0;
-}
-
-.lesson-map > svg {
-  display: block;
-  width: 100%;
-  border-radius: .65rem;
-  background: var(--portfolio-panel);
-}
-
-.lesson-map text {
-  fill: var(--portfolio-text);
-  font-size: 19px;
-  font-weight: 500;
-}
-
-.lesson-map-path {
-  stroke-width: 3.5;
-}
-
-.lesson-map-pickup {
-  stroke-dasharray: 7 6;
-}
-
-.lesson-map-path[data-muted="true"] {
-  opacity: .3;
-}
-
-.lesson-map figcaption,
-.lesson-map figcaption span,
-.lesson-assignment,
-.formulation-check {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .4rem;
-}
-
-.lesson-map figcaption {
-  gap: .35rem 1rem;
-  margin-top: .5rem;
-  color: var(--portfolio-muted);
-  font-size: .875rem;
-}
-
-.lesson-map-dashed {
-  width: 1.2rem;
-  border-top: 2px dashed var(--portfolio-control);
-}
-
-.lesson-assignment select {
-  min-height: 44px;
-  padding-inline: .6rem;
-  border: 1px solid var(--portfolio-control);
-  border-radius: .4rem;
-  background: var(--portfolio-background);
-}
-
-.formulation-check {
-  min-height: 44px;
-}
-
-.formulation-check input {
-  flex: 0 0 1.1rem;
-  height: 1.1rem;
-  accent-color: var(--portfolio-gold);
-}
-
-.formulation-range {
-  display: grid;
-}
-
-.formulation-meter {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: .25rem .65rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.formulation-meter > :nth-child(2) {
-  text-align: end;
-}
-
-.formulation-meter > div {
-  position: relative;
-  grid-column: 1 / -1;
-  height: .65rem;
-  background: var(--portfolio-panel);
-  border-radius: .25rem;
-}
-
-.formulation-meter i {
-  display: block;
-  height: 100%;
-  max-width: 100%;
-  border-radius: inherit;
-  background: var(--portfolio-highlight);
-}
-
-.formulation-meter i[data-variant="load"] {
-  background: var(--portfolio-gold);
-}
-
-.formulation-timeline b {
-  position: absolute;
-  top: 50%;
-  width: .45rem;
-  height: .45rem;
-  transform: translate(-50%, -50%) rotate(45deg);
-  background: var(--portfolio-background);
-}
-
-.formulation-products {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: .65rem 1rem;
-}
-
-.formulation-products > div {
-  display: grid;
-  gap: .25rem;
-}
-
-.formulation-products h4 {
-  font-weight: 600;
-}
-
-.formulation-findings {
-  max-width: 43rem;
-  margin-inline: auto;
-}
-
-.formulation-findings button {
-  justify-self: start;
-}
-
 @media (min-width: 800px) {
-  .formulation-overview,
-  .formulation-topic {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    column-gap: clamp(2rem, 5vw, 4.25rem);
-  }
-
-  .formulation-overview {
-    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  }
-
   .formulation-topic-equations {
     grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
     align-items: start;

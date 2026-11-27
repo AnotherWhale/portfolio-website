@@ -6,9 +6,9 @@ export const lessonStops = {
   hub: { label: "Depot", position: [250, 136] },
   supplier1: { label: "Supplier 1", position: [185, 91] },
   supplier2: { label: "Supplier 2", position: [72, 175] },
-  customerA: { label: "Customer A", position: [350, 66] },
-  customerB: { label: "Customer B", position: [440, 168] },
-  customer9: { label: "Customer 9", position: [375, 113] },
+  customer1: { label: "Customer 1", position: [350, 66] },
+  customer2: { label: "Customer 2", position: [440, 168] },
+  customer3: { label: "Customer 3", position: [375, 113] },
 } as const;
 
 export type LessonStop = keyof typeof lessonStops;
@@ -19,19 +19,14 @@ export const lessonSupply = [
 ] as const;
 
 export const lessonOrders = {
-  customerA: { A: 2, B: 0 },
-  customerB: { A: 0, B: 2 },
-  customer9: { A: 7, B: 12 },
+  customer1: { A: 2, B: 0 },
+  customer2: { A: 0, B: 2 },
+  customer3: { A: 7, B: 12 },
 } as const satisfies Record<string, Cargo>;
 
 export const lessonFleet = [{ id: 1, capacity: 10 }, { id: 2, capacity: 22 }] as const;
 export type LessonTruck = typeof lessonFleet[number]["id"];
 type Delivery = { stop: keyof typeof lessonOrders; cargo: Cargo };
-
-export const lessonColors: Record<LessonTruck, string> = {
-  1: "var(--portfolio-highlight)",
-  2: "var(--portfolio-gold)",
-};
 
 export const lessonUnits = (cargo: Cargo) => cargo.A + cargo.B;
 const addCargo = (first: Cargo, second: Cargo): Cargo => ({ A: first.A + second.A, B: first.B + second.B });
@@ -45,29 +40,29 @@ export function lessonTravelMinutes(from: LessonStop, to: LessonStop) {
 }
 
 const wholeOrderPlan: Record<LessonTruck, readonly Delivery[]> = {
-  1: [{ stop: "customerA", cargo: lessonOrders.customerA }],
+  1: [{ stop: "customer1", cargo: lessonOrders.customer1 }],
   2: [
-    { stop: "customer9", cargo: lessonOrders.customer9 },
-    { stop: "customerB", cargo: lessonOrders.customerB },
+    { stop: "customer3", cargo: lessonOrders.customer3 },
+    { stop: "customer2", cargo: lessonOrders.customer2 },
   ],
 };
 
 const alternativePlan: typeof wholeOrderPlan = {
   1: [
-    { stop: "customerA", cargo: lessonOrders.customerA },
-    { stop: "customerB", cargo: lessonOrders.customerB },
+    { stop: "customer1", cargo: lessonOrders.customer1 },
+    { stop: "customer2", cargo: lessonOrders.customer2 },
   ],
-  2: [{ stop: "customer9", cargo: lessonOrders.customer9 }],
+  2: [{ stop: "customer3", cargo: lessonOrders.customer3 }],
 };
 
 const splitOrderPlan: typeof wholeOrderPlan = {
   1: [
-    { stop: "customerA", cargo: lessonOrders.customerA },
-    { stop: "customer9", cargo: { A: lessonOrders.customer9.A, B: 0 } },
+    { stop: "customer1", cargo: lessonOrders.customer1 },
+    { stop: "customer3", cargo: { A: lessonOrders.customer3.A, B: 0 } },
   ],
   2: [
-    { stop: "customer9", cargo: { A: 0, B: lessonOrders.customer9.B } },
-    { stop: "customerB", cargo: lessonOrders.customerB },
+    { stop: "customer3", cargo: { A: 0, B: lessonOrders.customer3.B } },
+    { stop: "customer2", cargo: lessonOrders.customer2 },
   ],
 };
 
@@ -118,10 +113,10 @@ export function createLessonPlan({ crossDock = false, alternative = false, split
     const stops: LessonStop[] = ["hub", ...deliveries.map(({ stop }) => stop), "hub"];
     return [{ truck: id, capacity, cargo, depart, returnAt: depart + travel, travel, stops, deliveries }];
   });
-  const customer9 = routes.flatMap(({ deliveries }) =>
-    deliveries.filter(({ stop }) => stop === "customer9")).sort((a, b) => a.minute - b.minute);
+  const customer3 = routes.flatMap(({ deliveries }) =>
+    deliveries.filter(({ stop }) => stop === "customer3")).sort((a, b) => a.minute - b.minute);
   return {
-    inbound, allReady, groups, routes, customer9,
+    inbound, allReady, groups, routes, customer3,
     deliveryTravel: routes.reduce((total, { travel }) => total + travel, 0),
     end: Math.max(0, ...routes.map(({ returnAt }) => returnAt)),
   };

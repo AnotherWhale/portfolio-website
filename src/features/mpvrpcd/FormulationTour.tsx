@@ -1,319 +1,361 @@
-import { lazy, Suspense, useState } from "react";
-import LessonMap from "./LessonMap";
-import { createLessonPlan, inspectDeparture, lessonColors, lessonFleet, lessonOrders, lessonProducts, lessonSupply, lessonUnits } from "./lessonScenario";
+import { lazy, Suspense, useId, useState } from "react";
+import { routingThesisTitle } from "../../projectRoutes";
+import MapIcon, { type MapIconKind } from "./MapIcon";
+import { createLessonPlan, inspectDeparture, lessonFleet, lessonOrders, lessonProducts, lessonStops, lessonUnits, type Cargo, type LessonStop } from "./lessonScenario";
 import "./routingLesson.css";
 
 const TopicEquations = lazy(() => import("./ModelEquations").then(({ TopicEquations }) => ({ default: TopicEquations })));
-const whole = createLessonPlan({ crossDock: true });
-const split = createLessonPlan({ crossDock: true, splits: true, waves: true });
-const splitSingleWave = createLessonPlan({ crossDock: true, splits: true });
-const order = lessonOrders.customer9;
-const small = lessonFleet[0];
-const large = lessonFleet[1];
-const customerTotal = lessonUnits(order);
-const early = split.groups[0].minute;
-const late = whole.groups[0].minute;
-const timelineEnd = Math.ceil(Math.max(split.end, splitSingleWave.end) / 10) * 10;
-const pickupTravel = whole.inbound.reduce((total, { minute }) => total + minute, 0);
-const hiringCost = 12 + 24;
-const wholeCost = pickupTravel + whole.deliveryTravel + hiringCost;
-const splitCost = pickupTravel + split.deliveryTravel + hiringCost;
-const objectiveEquation = [1];
 
-const sections = [
-  {
-    id: "routes", title: "Vehicle routing", label: "Routes",
-    copy: "A vehicle routing problem (VRP) asks which stops each truck should visit and in what order. In this model, trucks collect goods from suppliers and return to the cross-dock before heading out to customers.",
-    role: "A leg is the drive from one stop to the next. Each leg adds to a truck’s travel time and driving cost.",
-    equations: [2, 3, 4, 5, 6, 7],
-    Visual: RouteChoice,
-  },
-  {
-    id: "fleet", title: "Fleet and capacity", label: "Fleet and capacity",
-    copy: "The fleet is the set of trucks available for the job. Trucks can differ in rental cost and capacity, which is the space available for goods. A truck’s load changes at each stop, so it has to fit on every leg.",
-    role: "The example compares the same order with the space available in each truck.",
-    equations: [8, 9],
-    Visual: FleetChoice,
-  },
-  {
-    id: "splits", title: "Split pickups and deliveries", label: "Split pickups and deliveries",
-    copy: "In a split pickup, more than one truck collects goods from the same supplier. In a split delivery, more than one truck delivers part of an order to the same customer.",
-    role: "The model tracks how much of each product each truck carries. Together the trucks can pick up only what the supplier has, and they must deliver everything the customer ordered.",
-    equations: [10, 11, 12, 13, 14, 15, 16, 17],
-    Visual: SplitChoice,
-  },
-  {
-    id: "timing", title: "Travel and arrival times", label: "Travel times",
-    copy: "A truck’s arrival time is its departure time plus the time it spends driving. The model carries that arrival time forward to the next leg and requires the truck to finish within the time available.",
-    role: "In the example, both trucks start their pickup routes at minute zero. Their routes take different amounts of time.",
-    equations: [18, 19, 20, 21, 22],
-    Visual: PickupTiming,
-  },
-  {
-    id: "inventory", title: "Cross-dock inventory", label: "Cross-dock inventory",
-    copy: "Inventory is the stock of goods on hand. The model counts each product separately. For each group of trucks, it adds incoming goods to the stock left by the previous group and subtracts what goes out for delivery.",
-    role: "The cross-dock needs enough of each product to load all the deliveries in a group. In the example, Product A arrives before Product B.",
-    equations: [23, 24, 25, 26, 27, 28],
-    Visual: InventoryChoice,
-  },
-  {
-    id: "waves", title: "Delivery periods", label: "Delivery periods",
-    copy: "A delivery wave is a group of trucks leaving the cross-dock together. The paper calls each wave a delivery period. Before a group can go, all its trucks must be back from pickups and the cross-dock must have enough of each product for their deliveries.",
-    role: "The trucks follow the same routes in both versions of the example. With two waves, the first truck can deliver part of the order sooner.",
-    equations: [29, 30, 31, 32, 33, 34, 35],
-    Visual: WaveChoice,
-  },
+const together = createLessonPlan({ crossDock: true });
+const split = createLessonPlan({ crossDock: true, splits: true, waves: true });
+const splitTogether = createLessonPlan({ crossDock: true, splits: true });
+const order = lessonOrders.customer3;
+const total = lessonUnits(order);
+const [smallTruck] = lessonFleet;
+const [firstPickup, lastPickup] = together.inbound;
+const pickupTravel = firstPickup.minute + lastPickup.minute;
+const cost = (plan: typeof together) => pickupTravel + plan.deliveryTravel + 12 + 24;
+const deliveryWindow = Math.ceil(Math.max(splitTogether.end, split.end) / 20) * 20;
+const timelineTicks = Array.from({ length: deliveryWindow / 20 + 1 }, (_, index) => index * 20);
+const emptyLoad: Cargo = { A: 0, B: 0 };
+
+const routeOptions = [
+  { label: "2, 1, then 3", stops: ["hub", "customer2", "customer1", "customer3", "hub"] },
+  { label: "1, 2, then 3", stops: ["hub", "customer1", "customer2", "customer3", "hub"] },
+] as const;
+const routeLengths = routeOptions.map(({ stops }) => Math.round(stops.slice(1).reduce((distance, stop, index) => {
+  const [x, y] = lessonStops[stop].position;
+  const [previousX, previousY] = lessonStops[stops[index]].position;
+  return distance + Math.hypot(x - previousX, y - previousY) / 10;
+}, 0)));
+
+function routePoint(stop: LessonStop) {
+  const [x, y] = lessonStops[stop].position;
+  return [x - 205, y - 28];
+}
+
+function LessonIcon({ kind }: { kind: MapIconKind }) {
+  return (
+    <svg className="routing-lesson-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <MapIcon kind={kind} x={12} y={12} size={24} color="currentColor" />
+    </svg>
+  );
+}
+
+function RouteComparison() {
+  const [choice, setChoice] = useState(0);
+  const [stopIndex, setStopIndex] = useState(0);
+  const directionId = useId();
+  const { stops } = routeOptions[choice];
+  const points = stops.map(routePoint);
+  const [truckX, truckY] = points[stopIndex];
+  const routeLine = points.flatMap(([x, y], index) => {
+    if (index === 0) return [`${x},${y}`];
+    const [previousX, previousY] = points[index - 1];
+    return [`${(x + previousX) / 2},${(y + previousY) / 2}`, `${x},${y}`];
+  }).join(" ");
+  return (
+    <div className="routing-demo">
+      <div className="routing-options" role="group" aria-label="Visit order">
+        {routeOptions.map(({ label }, index) => (
+          <button type="button" key={label} aria-pressed={choice === index} onClick={() => {
+            setChoice(index);
+            setStopIndex(0);
+          }}>{label}</button>
+        ))}
+      </div>
+      <svg className="routing-demo-map" viewBox="0 0 280 178" role="img"
+        aria-label={`Route from ${stops.map((stop) => lessonStops[stop].label).join(" to ")}`}>
+        <defs>
+          <marker id={directionId} viewBox="0 0 8 8" refX="4" refY="4" markerWidth="4" markerHeight="4" orient="auto">
+            <path d="M0 0 8 4 0 8Z" fill="var(--portfolio-highlight)" />
+          </marker>
+        </defs>
+        <polyline points={routeLine} markerMid={`url(#${directionId})`} />
+        {([...new Set(stops)]).map((stop) => {
+          const [x, y] = routePoint(stop);
+          return (
+            <g key={stop}>
+              <MapIcon kind={stop === "hub" ? "depot" : "customer"} x={x} y={y} size={27}
+                color={stop === "hub" ? "var(--portfolio-gold)" : undefined} />
+              <text x={x} y={y + 24} textAnchor="middle">{lessonStops[stop].label}</text>
+              {stop !== "hub" && <g className="routing-stop-number">
+                <circle cx={x + 13} cy={y - 11} r="8" />
+                <text x={x + 13} y={y - 11} textAnchor="middle" dominantBaseline="central">{stops.indexOf(stop)}</text>
+              </g>}
+            </g>
+          );
+        })}
+        <MapIcon kind="truck" x={truckX - 22} y={truckY - 13} size={20} color="var(--portfolio-gold)" />
+      </svg>
+      <div className="routing-demo-controls">
+        <div className="routing-options">
+          <button type="button" onClick={() => setStopIndex((stopIndex + 1) % stops.length)}>
+            {stopIndex === stops.length - 1 ? "Reset truck" : "Next stop"}
+          </button>
+        </div>
+        <span role="status">{stopIndex === 0 ? "Start at the depot"
+          : stopIndex === stops.length - 1 ? "Return to the depot" : `Stop ${stopIndex} · ${lessonStops[stops[stopIndex]].label}`}</span>
+      </div>
+      <p className="routing-demo-result" role="status"><strong>{routeLengths[choice]} distance units</strong>
+        {choice === 1 ? ` · ${routeLengths[0] - routeLengths[1]} fewer than the other route` : ""}</p>
+    </div>
+  );
+}
+
+const dockSteps = [
+  { label: "Truck 1 returns", minute: firstPickup.minute },
+  { label: "Truck 2 returns", minute: lastPickup.minute },
+  { label: "After loading", minute: lastPickup.minute + 1 },
 ] as const;
 
-function Meter({ label, value, maximum, variant = "stock" }: {
-  label: string;
-  value: number;
-  maximum: number;
-  variant?: "stock" | "load";
-}) {
+function Carton({ x, y, product }: { x: number; y: number; product: keyof Cargo }) {
   return (
-    <div className="formulation-meter">
-      <span>{label}</span><strong>{value}</strong>
-      <div aria-hidden="true"><i data-variant={variant} style={{ width: `${value / maximum * 100}%` }} /></div>
-    </div>
+    <g className="routing-carton" data-product={product} transform={`translate(${x} ${y})`}>
+      <path d="M1 4 3 1h8l2 3v9H1ZM1 4h12" />
+      <path className="routing-carton-tape" d="M5.5 1 5 4v3h4V4l-.5-3" />
+    </g>
   );
 }
 
-function RouteChoice() {
-  const [pickup, setPickup] = useState(true);
+function CartonStack({ cargo }: { cargo: Cargo }) {
+  const cartons = lessonProducts.flatMap((product) => Array<keyof Cargo>(cargo[product]).fill(product));
   return (
-    <div className="formulation-visual">
-      <div className="formulation-controls" role="group" aria-label="Route phase">
-        <button type="button" aria-pressed={pickup} onClick={() => setPickup(true)}>Pickup routes</button>
-        <button type="button" aria-pressed={!pickup} onClick={() => setPickup(false)}>Delivery routes</button>
-      </div>
-      <LessonMap plan={split} crossDock focus={pickup ? "pickup" : "delivery"} splitChapter={false} />
-      <p>{pickup ? "Each truck starts at the cross-dock, visits a supplier, and returns with goods."
-        : "Each truck leaves the cross-dock, visits its assigned customers, and returns."}</p>
-    </div>
-  );
-}
-
-function FleetChoice() {
-  const [truck, setTruck] = useState<number>(small.id);
-  const chosen = truck === small.id ? small : large;
-  return (
-    <div className="formulation-visual">
-      <label className="lesson-assignment">Try Customer 9’s whole order on
-        <select value={truck} onChange={(event) => setTruck(Number(event.currentTarget.value))}>
-          {lessonFleet.map(({ id }) => <option value={id} key={id}>Truck {id}</option>)}
-        </select>
-      </label>
-      <Meter label="Order volume" value={customerTotal} maximum={large.capacity} variant="load" />
-      <Meter label={`Truck ${truck} capacity`} value={chosen.capacity} maximum={large.capacity} />
-      <p role="status">{customerTotal > chosen.capacity
-        ? `Truck ${truck} needs room for ${customerTotal - chosen.capacity} more units to carry the whole order.`
-        : `The order fits with ${chosen.capacity - customerTotal} units of space left.`}</p>
-    </div>
-  );
-}
-
-function SplitChoice() {
-  const [pickup, setPickup] = useState(true);
-  const [share, setShare] = useState(7);
-  const [shared, setShared] = useState(false);
-  const supplier = lessonSupply[0].cargo.A;
-  const parts = pickup ? [share, supplier - share] : shared ? [order.A, order.B] : [0, customerTotal];
-  return (
-    <div className="formulation-visual">
-      <div className="formulation-controls" role="group" aria-label="Split example">
-        <button type="button" aria-pressed={pickup} onClick={() => setPickup(true)}>Split a pickup</button>
-        <button type="button" aria-pressed={!pickup} onClick={() => setPickup(false)}>Split a delivery</button>
-      </div>
-      {pickup ? (
-        <label className="formulation-range">Supplier 1 has {supplier} units of Product A. Assign {share} to Truck 1.
-          <input type="range" min={1} max={supplier} value={share} onChange={(event) => setShare(Number(event.currentTarget.value))} />
-        </label>
-      ) : (
-        <label className="formulation-check"><input type="checkbox" checked={shared} onChange={(event) => setShared(event.currentTarget.checked)} />Share Customer 9’s order</label>
-      )}
-      <Meter label="Truck 1" value={parts[0]} maximum={pickup ? supplier : customerTotal} />
-      <Meter label="Truck 2" value={parts[1]} maximum={pickup ? supplier : customerTotal} variant="load" />
-      <p role="status">{pickup
-        ? `Together they collect all ${supplier} units of Product A from this supplier.`
-        : shared ? `Truck 1 delivers ${order.A} of A, and Truck 2 delivers ${order.B} of B.`
-          : `Truck 2 delivers all ${customerTotal} units to Customer 9.`}</p>
-    </div>
-  );
-}
-
-function InventoryChoice() {
-  const [minute, setMinute] = useState(early);
-  const { available, needed, short } = inspectDeparture(whole, minute);
-  const capacity = Math.max(...lessonProducts.map((product) => lessonSupply.reduce((sum, { cargo }) => sum + cargo[product], 0)));
-  return (
-    <div className="formulation-visual">
-      <div className="formulation-controls" role="group" aria-label="Inventory checkpoint">
-        {[early, late, late + 1].map((point) => (
-          <button type="button" key={point} aria-pressed={minute === point} onClick={() => setMinute(point)}>
-            {point === early ? "First truck returns" : point === late ? "Both trucks back" : "After loading"}
-          </button>
-        ))}
-      </div>
-      <p>Minute {minute} · One planned departure</p>
-      <div className="formulation-products">
-        {lessonProducts.map((product) => (
-          <div key={product}>
-            <h4>Product {product}</h4>
-            <Meter label="At the dock" value={available[product]} maximum={capacity} />
-            {minute <= late && <Meter label="Group needs" value={needed[product]} maximum={capacity} variant="load" />}
-          </div>
-        ))}
-      </div>
-      <p role="status">{minute === early ? `The group is still short ${short.B} units of Product B.`
-        : minute === late ? `Both products are ready. Truck 2 can take ${order.A} units of A that Truck 1 brought in.`
-          : "The trucks have loaded everything. There’s none of either product left at the cross-dock."}</p>
-    </div>
-  );
-}
-
-function PickupTiming() {
-  return (
-    <div className="formulation-visual">
-      <p>Minutes from departure to the cross-dock return</p>
-      {whole.inbound.map(({ truck, minute }) => (
-        <Meter key={truck} label={`Truck ${truck}`} value={minute} maximum={whole.allReady} />
+    <svg className="routing-carton-stack" viewBox="0 0 98 63" aria-hidden="true">
+      <path className="routing-pallet" d="M1 56h96v3H1Zm6 3v3m42-3v3m42-3v3" />
+      {cartons.map((product, index) => (
+        <Carton key={index} product={product} x={index % 7 * 14} y={42 - Math.floor(index / 7) * 14} />
       ))}
-    </div>
+    </svg>
   );
 }
 
-function WaveChoice() {
-  const [multiple, setMultiple] = useState(true);
-  const plan = multiple ? split : splitSingleWave;
+function CartonKey() {
   return (
-    <div className="formulation-visual">
-      <label className="formulation-check"><input type="checkbox" checked={multiple} onChange={(event) => setMultiple(event.currentTarget.checked)} />Let the trucks leave separately</label>
-      <p>Bars show when each truck is out delivering. Diamonds mark when it reaches Customer 9.</p>
-      {plan.routes.map(({ truck, depart, travel, deliveries }) => {
-        const arrival = deliveries.find(({ stop }) => stop === "customer9")?.minute;
-        return (
-          <div className="formulation-meter" key={truck}>
-            <strong>Truck {truck}</strong><span>Leaves {depart} min{arrival !== undefined && ` · Customer 9 at ${arrival} min`}</span>
-            <div className="formulation-timeline" aria-hidden="true">
-              <i style={{ marginLeft: `${depart / timelineEnd * 100}%`, width: `${travel / timelineEnd * 100}%`, background: lessonColors[truck] }} />
-              {arrival !== undefined && <b style={{ left: `${arrival / timelineEnd * 100}%` }} />}
-            </div>
-          </div>
-        );
-      })}
-      <p role="status">{multiple
-        ? `Truck 1 can leave at minute ${early} with Product A. Truck 2 leaves at minute ${late} with Product B.`
-        : `Both trucks wait until minute ${late} and leave together.`}</p>
+    <p className="routing-carton-key">
+      {lessonProducts.map((product) => <span key={product}>
+        <svg viewBox="0 0 14 14" aria-hidden="true"><Carton x={0} y={0} product={product} /></svg> Product {product}
+      </span>)}
+      <span>One carton represents one unit.</span>
+    </p>
+  );
+}
+
+function DockHandoff() {
+  const [step, setStep] = useState(0);
+  const { available } = inspectDeparture(together, dockSteps[step].minute);
+  return (
+    <div className="routing-demo">
+      <div className="routing-options" role="group" aria-label="Cross-dock stage">
+        {dockSteps.map(({ label }, index) => (
+          <button type="button" key={label} aria-pressed={step === index} onClick={() => setStep(index)}>{label}</button>
+        ))}
+      </div>
+      <ol className="routing-dock-flow">
+        <li><LessonIcon kind="truck" /><strong>In transit</strong>
+          <span>{step === 0 ? `${lastPickup.cargo.B} B` : "0 units"}</span>
+          <CartonStack cargo={step === 0 ? lastPickup.cargo : emptyLoad} />
+        </li>
+        <li><LessonIcon kind="depot" /><strong>Cross-dock</strong>
+          <span>{available.A} A · {available.B} B</span>
+          <CartonStack cargo={available} />
+        </li>
+        <li><LessonIcon kind="customer" /><strong>Customer 3</strong>
+          <span>{step === 2 ? `${order.A} A · ${order.B} B` : "0 units"}</span>
+          <CartonStack cargo={step === 2 ? order : emptyLoad} />
+        </li>
+      </ol>
+      <CartonKey />
+      <p className="routing-demo-result" role="status"><strong>Minute {dockSteps[step].minute}</strong>
+        {step === 0 ? ` · Truck 1 unloads ${firstPickup.cargo.A} units of A. Truck 2 is returning with B.`
+          : step === 1 ? " · Both products are in stock and ready to load."
+          : " · Truck 2 loads Customer 3’s order. The remaining stock goes to the other customers."}</p>
     </div>
   );
 }
 
-function EquationDisclosure({ numbers }: { numbers: readonly number[] }) {
+function TruckLoad({ capacity, cargo }: { capacity: number; cargo: Cargo }) {
+  const columns = Math.ceil(capacity / 2);
+  const cab = 6 + columns * 15;
+  const loaded = lessonUnits(cargo);
+  return (
+    <svg className="routing-truck-diagram" viewBox="0 3 207 51" role="img"
+      aria-label={`${loaded} of ${capacity} slots filled for Customer 3: ${cargo.A} units of Product A and ${cargo.B} units of Product B`}>
+      <path className="routing-truck-body" d={`M3 6h${cab - 3}v37H3ZM${cab} 17h17l13 13v13h-30Z`} />
+      <path className="routing-truck-window" d={`M${cab + 5} 22h10l8 8h-18Z`} />
+      {Array.from({ length: capacity }, (_, index) => {
+        const x = 6 + index % columns * 15;
+        const y = index < columns ? 25 : 10;
+        return index < loaded
+          ? <Carton key={index} x={x} y={y} product={index < cargo.A ? "A" : "B"} />
+          : <rect className="routing-empty-slot" key={index} x={x + 1} y={y + 1} width="12" height="12" rx="1" />;
+      })}
+      <circle className="routing-truck-wheel" cx="24" cy="45" r="6" />
+      <circle className="routing-truck-wheel" cx={cab + 16} cy="45" r="6" />
+    </svg>
+  );
+}
+
+function SplitOrder() {
+  const [share, setShare] = useState(false);
+  const truckLoads = share ? [{ A: order.A, B: 0 }, { A: 0, B: order.B }] : [emptyLoad, order];
+  return (
+    <div className="routing-demo">
+      <div className="routing-options" role="group" aria-label="Customer 3 order assignment">
+        <button type="button" aria-pressed={!share} onClick={() => setShare(false)}>One truck delivers</button>
+        <button type="button" aria-pressed={share} onClick={() => setShare(true)}>Two trucks share</button>
+      </div>
+      <dl className="routing-truck-loads">
+        {lessonFleet.map(({ id, capacity }, index) => <div key={id}>
+          <dt><strong>Truck {id}</strong> · {lessonUnits(truckLoads[index])}/{capacity} spaces used</dt>
+          <dd>
+            <TruckLoad capacity={capacity} cargo={truckLoads[index]} />
+            <span>{truckLoads[index].A} A · {truckLoads[index].B} B</span>
+          </dd>
+        </div>)}
+      </dl>
+      <CartonKey />
+      <p className="routing-demo-result" role="status">{share
+        ? <><strong>{total} of {total} units assigned.</strong> Each truck carries the product it picked up.</>
+        : <><strong>Truck 2 can carry all {total} units.</strong> The full order exceeds Truck 1’s capacity by {total - smallTruck.capacity} units.</>}</p>
+    </div>
+  );
+}
+
+function DeliveryWaves() {
+  const [separate, setSeparate] = useState(false);
+  const plan = separate ? split : splitTogether;
+  const [first, last] = plan.customer3;
+  return (
+    <div className="routing-demo">
+      <div className="routing-options" role="group" aria-label="Departure schedule">
+        <button type="button" aria-pressed={!separate} onClick={() => setSeparate(false)}>Depart together</button>
+        <button type="button" aria-pressed={separate} onClick={() => setSeparate(true)}>Depart separately</button>
+      </div>
+      <div className="routing-wave-chart">
+        {plan.routes.map(({ truck, depart, returnAt }) => {
+          const arrival = first.truck === truck ? first.minute : last.minute;
+          return (
+            <div className="routing-wave-row" key={truck}>
+              <strong className="routing-wave-vehicle"><LessonIcon kind="truck" /> Truck {truck} · Product {truck === smallTruck.id ? "A" : "B"}</strong>
+              <span>Departs at {depart} · Reaches Customer 3 at {arrival} · Returns at {returnAt}</span>
+              <div className="routing-wave-track" aria-hidden="true">
+                <i style={{ left: `${depart / deliveryWindow * 100}%`, width: `${(returnAt - depart) / deliveryWindow * 100}%` }} />
+                <span className="routing-wave-arrival" style={{ left: `${depart / deliveryWindow * 100}%` }}><LessonIcon kind="truck" /></span>
+                <span className="routing-wave-arrival" style={{ left: `${arrival / deliveryWindow * 100}%` }}><LessonIcon kind="customer" /></span>
+                <span className="routing-wave-arrival" style={{ left: `${returnAt / deliveryWindow * 100}%` }}><LessonIcon kind="depot" /></span>
+              </div>
+            </div>
+          );
+        })}
+        <div className="routing-time-axis" aria-hidden="true">{timelineTicks.map((minute) => <span key={minute}>{minute}</span>)}</div>
+        <p>Time in minutes. The truck marks departure, the house marks delivery, and the depot marks return.</p>
+      </div>
+      <p className="routing-demo-result" role="status"><strong>All {total} units delivered by minute {last.minute}.</strong>
+        {separate ? ` Product A arrives ${lastPickup.minute - firstPickup.minute} minutes earlier with the same driving time.`
+          : " Truck 1 waits for Product B to return with Truck 2."}</p>
+    </div>
+  );
+}
+
+export default function FormulationTour({ paperHref }: { paperHref: string }) {
+  return (
+    <div className="formulation-tour">
+      <section className="routing-section routing-lesson" aria-labelledby="routing-lesson-title">
+        <header>
+          <h2 id="routing-lesson-title" tabIndex={-1}>A three-customer routing example</h2>
+          <p>The routes, quantities, and costs are illustrative.</p>
+        </header>
+        <section className="routing-chapter" aria-labelledby="routing-chapter-routes">
+          <div>
+            <h3 id="routing-chapter-routes">Stop order and route distance</h3>
+            <p>Compare two routes from the depot to customers 1, 2, and 3 and back.</p>
+          </div>
+          <RouteComparison />
+        </section>
+        <section className="routing-chapter" aria-labelledby="routing-chapter-dock">
+          <div>
+            <h3 id="routing-chapter-dock">Cross-dock inventory</h3>
+            <p>Follow the stock from pickup to loading. Customer 3 needs {order.A} units of A and {order.B} units of B.</p>
+          </div>
+          <DockHandoff />
+        </section>
+        <section className="routing-chapter" aria-labelledby="routing-chapter-split">
+          <div>
+            <h3 id="routing-chapter-split">Split deliveries and vehicle capacity</h3>
+            <p>In a split delivery, more than one vehicle serves the same customer. In a split pickup, more than one vehicle collects goods from the same supplier.</p>
+            <p>Compare the portion of Customer 3’s order assigned to each truck with that truck’s capacity.</p>
+          </div>
+          <SplitOrder />
+        </section>
+        <section className="routing-chapter" aria-labelledby="routing-chapter-waves">
+          <div>
+            <h3 id="routing-chapter-waves">Delivery periods and arrival times</h3>
+            <p>A delivery period begins when a group of trucks leaves the cross-dock. The group can depart once its trucks have returned from pickup and the dock has enough stock to load them.</p>
+            <p>Both schedules use the same routes and divide the order in the same way. Compare the arrival times when the trucks depart together and when they depart separately.</p>
+          </div>
+          <DeliveryWaves />
+        </section>
+        <details className="formulation-equations routing-lesson-cost">
+          <summary>Cost and timing by delivery plan</summary>
+          <table className="routing-wave-table">
+            <caption>Illustrative cost and delivery times for Customer 3</caption>
+            <thead><tr><th scope="col">Plan</th><th scope="col">First delivery</th><th scope="col">Order complete</th><th scope="col">Total cost</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">One truck delivers</th><td>{together.customer3[0].minute} min</td><td>{together.customer3[0].minute} min</td><td>{cost(together)} pts</td></tr>
+              <tr><th scope="row">Split delivery with separate departures</th><td>{split.customer3[0].minute} min</td><td>{split.customer3[1].minute} min</td><td>{cost(split)} pts</td></tr>
+            </tbody>
+          </table>
+          <p>Sharing the order costs {cost(split) - cost(together)} extra points in this example because both trucks visit Customer 3. Driving costs one point per minute, and hiring the two trucks costs 12 and 24 points respectively.</p>
+        </details>
+      </section>
+
+      <section className="routing-section routing-findings" aria-labelledby="tour-findings">
+        <div>
+          <p className="routing-kicker">Published study</p>
+          <h2 id="tour-findings">Benchmark results</h2>
+        </div>
+        <div>
+          <p>At the highest tested supply and demand level, all ten instances had feasible solutions when split pickups and deliveries were allowed. With splits prohibited, none of the ten instances had a feasible solution.</p>
+          <p>Using trucks of different sizes lowered modeled costs and generally increased solve time. The 30-node cases did not reach a proven optimum within the one-hour limit.</p>
+          <p className="routing-citation">Mustafa Turner and Komarudin · IEOM 2022</p>
+          <a href={paperHref} target="_blank" rel="noreferrer">{routingThesisTitle}</a>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+const equationGroups = [
+  { label: "Driving and truck hire costs", first: 1, last: 1 },
+  { label: "Vehicle routing", first: 2, last: 7 },
+  { label: "Truck capacity", first: 8, last: 9 },
+  { label: "Split pickups and deliveries", first: 10, last: 17 },
+  { label: "Travel and arrival times", first: 18, last: 22 },
+  { label: "Cross-dock inventory", first: 23, last: 28 },
+  { label: "Delivery periods", first: 29, last: 35 },
+];
+
+function EquationGroup({ label, first, last }: typeof equationGroups[number]) {
   const [opened, setOpened] = useState(false);
   return (
     <details className="formulation-equations" onToggle={(event) => {
       if (event.currentTarget.open) setOpened(true);
     }}>
-      <summary>{`View equations ${numbers[0]}–${numbers[numbers.length - 1]}`}</summary>
-      {opened && <Suspense fallback={<p>Loading equations…</p>}><TopicEquations numbers={numbers} /></Suspense>}
+      <summary>{label} ({first === last ? first : `${first}–${last}`})</summary>
+      {opened && <Suspense fallback={<p>Loading equations…</p>}>
+        <TopicEquations numbers={Array.from({ length: last - first + 1 }, (_, index) => first + index)} />
+      </Suspense>}
     </details>
   );
 }
 
-const exampleSteps = [
-  { minute: early, action: "See the first delivery", explanation: "Truck 1 leaves with Product A while Truck 2 is still collecting Product B." },
-  { minute: split.customer9[0].minute, action: "See the order completed", explanation: `Truck 1 delivers ${order.A} units of Product A to Customer 9.` },
-  { minute: split.customer9[1].minute, action: "Restart the example", explanation: `Truck 2 delivers the remaining ${order.B} units of Product B.` },
-] as const;
-
-function showEquationGroup(id: string) {
-  const heading = document.getElementById(id);
-  const disclosure = heading?.closest("section")?.querySelector("details.formulation-equations");
-  if (disclosure instanceof HTMLDetailsElement) disclosure.open = true;
-  heading?.scrollIntoView({ block: "start" });
-  heading?.focus({ preventScroll: true });
-}
-
-export default function FormulationTour({ paperHref, onShowReplay }: { paperHref: string; onShowReplay: () => void }) {
-  const [step, setStep] = useState(0);
-  const { minute, action, explanation } = exampleSteps[step];
+export function FormulationAppendix() {
   return (
-    <div className="formulation-tour">
-      <section id="formulation-example" tabIndex={-1} className="routing-section formulation-overview" aria-labelledby="formulation-example-title">
-        <div className="formulation-copy">
-          <h2 id="formulation-example-title">Two-truck teaching example</h2>
-          <p>Customer 9 ordered {order.A} units of Product A and {order.B} of Product B. At minute {early}, one truck is back with Product A. The other is still collecting Product B.</p>
-          <p>At the cross-dock, trucks unload and sort goods for delivery. This example compares sending part of an order early with delivering the whole order together.</p>
-          <button className="portfolio-button routing-primary-action" type="button"
-            onClick={() => setStep((index) => (index + 1) % exampleSteps.length)}>{action}</button>
-          <div className="formulation-milestone" role="status">
-            <strong>Minute {minute} · {split.customer9.filter((entry) => entry.minute <= minute)
-              .reduce((count, { cargo }) => count + lessonUnits(cargo), 0)} of {customerTotal} units delivered</strong>
-            <p>{explanation}</p>
-          </div>
-        </div>
-        <LessonMap plan={split} crossDock focus="delivery" splitChapter minute={minute} focusOrder />
-        <div className="formulation-comparison">
-          <h3>Delivery timing and cost</h3>
-          <table>
-            <thead><tr><th scope="col">Plan</th><th scope="col">First delivery</th><th scope="col">Order complete</th><th scope="col">Total cost</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Together</th><td>{customerTotal} at {whole.customer9[0].minute} min</td><td>{whole.customer9[0].minute} min</td><td>{wholeCost} pts</td></tr>
-              <tr><th scope="row">Split</th><td>{order.A} at {split.customer9[0].minute} min</td><td>{split.customer9[1].minute} min</td><td>{splitCost} pts</td></tr>
-            </tbody>
-          </table>
-          <p>The split plan gets {order.A} units there {whole.customer9[0].minute - split.customer9[0].minute} minutes earlier for {splitCost - wholeCost} extra points. Both plans finish Customer 9’s order at the same time.</p>
-          <details className="formulation-equations">
-            <summary>How the example calculates costs</summary>
-            <p>Driving costs 1 point per minute. Both plans use the same two trucks, which cost 12 and 24 points to hire. The split plan adds driving because both trucks visit Customer 9.</p>
-          </details>
-        </div>
-      </section>
-
-      <nav className="formulation-index" aria-labelledby="formulation-index-title">
-        <h2 id="formulation-index-title" tabIndex={-1}>Model equations</h2>
-        <ul>
-          <li><button type="button" className="routing-text-action" onClick={() => showEquationGroup("formulation-objective-title")}>Objective (1)</button></li>
-          {sections.map(({ id, label, equations }) => (
-            <li key={id}>
-              <button type="button" className="routing-text-action" onClick={() => showEquationGroup(`tour-${id}`)}>
-                {label} ({equations[0]}–{equations[equations.length - 1]})
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <section className="routing-section formulation-objective" aria-labelledby="formulation-objective-title">
-        <div className="formulation-copy">
-          <h2 id="formulation-objective-title" tabIndex={-1}>Objective function</h2>
-          <p className="formulation-objective-goal">Fill every order at the lowest total cost.</p>
-          <p>In my thesis, I used one model to decide which trucks to use, what they carry, and when they leave. The equation below adds driving costs and truck hire costs.</p>
-        </div>
-        <Suspense fallback={<p>Loading the objective equation…</p>}>
-          <TopicEquations numbers={objectiveEquation} />
-        </Suspense>
-      </section>
-
-      {sections.map(({ id, title, copy, role, equations, Visual }) => (
-        <section className="routing-section formulation-topic" key={id} aria-labelledby={`tour-${id}`}>
-          <div className="formulation-copy">
-            <h2 id={`tour-${id}`} tabIndex={-1}>{title}</h2>
-            <p>{copy}</p>
-            <p className="formulation-contribution">{role}</p>
-          </div>
-          <Visual />
-          <EquationDisclosure numbers={equations} />
-        </section>
-      ))}
-
-      <aside className="routing-section formulation-findings" aria-labelledby="tour-findings">
-        <h2 id="tour-findings">What we found</h2>
-        <blockquote cite={paperHref}>“Split pickups and deliveries can produce lower objective values and generate solutions previously infeasible.”</blockquote>
-        <p>For the ten test cases with the most goods to move, the model found a plan that filled all orders in every case with splitting enabled and in zero cases with splitting disabled. Using trucks of different sizes also lowered costs in the tests and generally increased computing time.</p>
-        <button type="button" className="routing-text-action" onClick={onShowReplay}>Back to the full research replay</button>
-      </aside>
-    </div>
+    <section className="routing-section routing-appendix" aria-labelledby="formulation-index-title">
+      <h2 id="formulation-index-title" tabIndex={-1}>Model equations</h2>
+      <p>The published model chooses routes, loads, and departure times to fill every order at the lowest combined driving and truck hire cost.</p>
+      {equationGroups.map((group) => <EquationGroup key={group.first} {...group} />)}
+    </section>
   );
 }

@@ -1,7 +1,20 @@
 .routing-lab {
+  --cargo-p0: #62b4a4;
+  --cargo-p1: #e7ae65;
+  --cargo-p2: #a58ad8;
+  --cargo-p3: #75a8e2;
+  --routing-type-title: clamp(2rem, 1.6rem + 2vw, 3.5rem);
+  --routing-type-section: 1.375rem;
+  --routing-type-headline: 1.125rem;
+  --routing-type-body: 1.0625rem;
+  --routing-type-label: .9375rem;
+  --routing-type-caption: .875rem;
+  font-family: system-ui, sans-serif;
+  font-size: var(--routing-type-body);
+  line-height: 1.55;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.5rem, 3vw, 2.5rem);
+  gap: clamp(1rem, 2.5vw, 2.5rem);
   width: min(100% - 2rem, 66rem);
   margin-inline: auto;
   padding: .85rem 0 3rem;
@@ -28,7 +41,7 @@
   align-items: center;
   min-height: 44px;
   text-decoration: underline;
-  font-size: .85rem;
+  font-size: var(--routing-type-label);
 }
 
 .routing-nav-action {
@@ -40,30 +53,66 @@
   text-underline-offset: .2em;
 }
 
-.routing-story {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1.25rem, 3vw, 2rem);
-}
-
 .routing-header {
   display: grid;
-  gap: .6rem;
-  max-width: 41rem;
+  gap: .65rem;
+  max-width: 53rem;
 }
 
 .routing-kicker {
   color: var(--portfolio-gold);
-  font-size: .9rem;
+  font-size: var(--routing-type-label);
   font-weight: 600;
 }
 
 .routing-header h1 {
-  font-size: clamp(1.55rem, 5vw, 2.5rem);
+  font-size: var(--routing-type-title);
   font-weight: 600;
   letter-spacing: -.035em;
   line-height: 1.12;
   text-wrap: balance;
+}
+
+.routing-intro {
+  display: grid;
+  gap: .65rem;
+  max-width: 68ch;
+  color: var(--portfolio-muted);
+  font-size: var(--routing-type-body);
+  line-height: 1.55;
+}
+
+.routing-intro section {
+  display: grid;
+  gap: .2rem;
+}
+
+.routing-intro h2 {
+  line-height: 1.3;
+  color: var(--portfolio-text);
+  font-size: var(--routing-type-headline);
+  font-weight: 600;
+}
+
+.routing-citation {
+  color: var(--portfolio-muted);
+  font-size: var(--routing-type-caption);
+  max-width: 67ch;
+}
+
+.routing-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .25rem .85rem;
+}
+
+.routing-intro-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--routing-type-label);
+  text-decoration: underline;
 }
 
 .routing-section p,
@@ -72,7 +121,7 @@
 }
 
 .routing-section p {
-  line-height: 1.7;
+  line-height: 1.55;
 }
 
 .routing-run > a {
@@ -94,9 +143,9 @@
 }
 
 .routing-section h2 {
-  font-size: 1.3rem;
+  font-size: var(--routing-type-section);
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.25;
 }
 
 .routing-replay {
@@ -114,10 +163,174 @@
   margin-top: .3rem;
 }
 
+.routing-fulfillment-overview {
+  margin-block-end: .75rem;
+  padding: .6rem .75rem;
+  border: 1px solid var(--portfolio-rule);
+  border-radius: .6rem;
+  background: var(--portfolio-panel);
+}
+
+.routing-fulfillment-overview h3 {
+  font-size: var(--routing-type-headline);
+  font-weight: 600;
+}
+
+.routing-fulfillment-overview p,
+.routing-section .routing-map-caption {
+  font-size: var(--routing-type-label);
+}
+
+.routing-fulfillment-counts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 .7rem;
+  font-size: var(--routing-type-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-fulfillment-counts span {
+  color: var(--portfolio-muted);
+}
+
+.routing-fulfillment meter {
+  display: block;
+  width: 100%;
+  height: .65rem;
+  margin-block: .35rem;
+}
+
+.routing-fulfillment meter::-webkit-meter-bar {
+  height: .65rem;
+  background: var(--portfolio-background);
+  border: 1px solid var(--portfolio-control);
+}
+
+.routing-fulfillment meter::-webkit-meter-optimum-value {
+  background: var(--portfolio-highlight);
+}
+
+.routing-fulfillment meter::-moz-meter-bar {
+  background: var(--portfolio-highlight);
+}
+
+.routing-icon-cargo-fill[data-product="0"],
+.routing-cargo-key [data-product="0"] { --cargo-color: var(--cargo-p0); }
+.routing-icon-cargo-fill[data-product="1"],
+.routing-cargo-key [data-product="1"] { --cargo-color: var(--cargo-p1); }
+.routing-icon-cargo-fill[data-product="2"],
+.routing-cargo-key [data-product="2"] { --cargo-color: var(--cargo-p2); }
+.routing-icon-cargo-fill[data-product="3"],
+.routing-cargo-key [data-product="3"] { --cargo-color: var(--cargo-p3); }
+
+.routing-icon-cargo-fill {
+  fill: var(--cargo-color);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: transform 140ms ease-out;
+}
+
+.routing-icon-cargo-track {
+  fill: #424d61;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .routing-icon-cargo-fill {
+    transition: none;
+  }
+}
+
+.routing-cargo-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2rem .8rem;
+  font-size: var(--routing-type-label);
+}
+
+.routing-cargo-key li {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+}
+
+.routing-cargo-key span {
+  width: .55rem;
+  height: .55rem;
+  background: var(--cargo-color);
+  border-radius: .1rem;
+}
+
+.routing-moving-trucks {
+  pointer-events: none;
+}
+
+.routing-map-selection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .2rem .75rem;
+  padding-block: .35rem;
+  border-block-start: 1px solid var(--portfolio-rule);
+  font-size: var(--routing-type-label);
+}
+
+.routing-map-selection > div,
+.routing-map-selection dl,
+.routing-map-selection dl > div {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .15rem .4rem;
+}
+
+.routing-map-selection dl {
+  gap: .25rem .7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-map-selection span,
+.routing-map-selection dt {
+  color: var(--portfolio-muted);
+}
+
+.routing-inventory,
+.routing-stop-events {
+  margin-block-start: .5rem;
+}
+
+.routing-data-table {
+  width: 100%;
+  font-size: var(--routing-type-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.routing-data-table caption {
+  text-align: start;
+  color: var(--portfolio-muted);
+  padding-block: .25rem;
+}
+
+.routing-data-table th,
+.routing-data-table td {
+  padding: .3rem .25rem;
+  text-align: end;
+  border-block-end: 1px solid var(--portfolio-rule);
+}
+
+.routing-data-table th:first-child {
+  text-align: start;
+}
+
+.routing-data-table td[data-empty="true"] {
+  color: var(--portfolio-muted);
+}
+
 .routing-legend,
 .routing-events span,
 .routing-run dt {
-  font-size: .875rem;
+  font-size: var(--routing-type-label);
   color: var(--portfolio-muted);
 }
 
@@ -140,7 +353,7 @@
 
 .routing-track {
   stroke-width: 2;
-  opacity: .26;
+  opacity: .14;
 }
 
 .routing-trail,
@@ -150,7 +363,11 @@
 }
 
 .routing-trail {
-  opacity: .72;
+  opacity: .35;
+}
+
+.routing-active-leg {
+  opacity: .7;
 }
 
 .routing-node {
@@ -164,13 +381,25 @@
   color: var(--portfolio-gold);
 }
 
-.routing-node text {
+.routing-node-number {
   fill: currentColor;
   text-anchor: middle;
   dominant-baseline: middle;
   font-size: 20px;
   font-weight: 600;
   pointer-events: none;
+}
+
+.routing-node-hit {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 2;
+}
+
+.routing-node:hover .routing-node-hit,
+.routing-node:focus-visible .routing-node-hit,
+.routing-node[aria-pressed="true"] .routing-node-hit {
+  stroke: currentColor;
 }
 
 .routing-legend {
@@ -195,10 +424,11 @@
 }
 
 .routing-playback-row {
-  font-size: .9rem;
+  font-size: var(--routing-type-label);
 }
 
 .routing-lab button.routing-primary-action {
+  font-size: var(--routing-type-label);
   justify-self: start;
   background: var(--portfolio-gold);
   color: var(--portfolio-background);
@@ -218,6 +448,7 @@
 }
 
 .routing-text-action {
+  font-size: var(--routing-type-label);
   min-height: 44px;
   color: var(--portfolio-gold);
   text-align: start;
@@ -248,13 +479,13 @@
 }
 
 .routing-events strong {
-  font-size: .94rem;
+  font-size: var(--routing-type-label);
   font-weight: 600;
 }
 
 .routing-events button {
-  white-space: nowrap;
-  font-size: .875rem;
+  text-align: end;
+  font-size: var(--routing-type-label);
 }
 
 .routing-run dl {
@@ -277,13 +508,13 @@
 
 .routing-equation {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
+  grid-template-columns: 2.5em minmax(0, 1fr);
   gap: .5rem;
 }
 
 .routing-equation-number {
   color: var(--portfolio-gold);
-  font-size: .875rem;
+  font-size: var(--routing-type-label);
   font-variant-numeric: tabular-nums;
 }
 
@@ -322,14 +553,14 @@
 
 .routing-equation-condition,
 .routing-equation-note {
-  font-size: .875rem;
+  font-size: var(--routing-type-label);
 }
 
 .routing-equation-translation > summary {
   width: fit-content;
   padding-block: .5rem;
   color: var(--portfolio-gold);
-  font-size: .9rem;
+  font-size: var(--routing-type-label);
   cursor: pointer;
 }
 
@@ -366,14 +597,6 @@
     width: min(100% - clamp(4rem, 9vw, 9rem), 68rem);
     gap: clamp(3rem, 4.6vw, 4.5rem);
     padding: 1.25rem 0 5rem;
-  }
-
-  .routing-header {
-    gap: .85rem;
-    width: min(100%, 53rem);
-    max-width: none;
-    margin-inline: auto;
-    text-align: center;
   }
 
   .routing-layout {
@@ -423,7 +646,7 @@
     font-size: 23px;
   }
 
-  .routing-node text {
+  .routing-node-number {
     font-size: 24px;
   }
 }
